@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { VideoResolutions } from "../types/videos";
 
-const videos = [
+let videos = [
   {
     "id": 0,
     "title": "string",
@@ -27,11 +27,11 @@ function isValidISODateString(dateString: string): boolean {
 
 export const homeTask01Router = Router();
 
-homeTask01Router.get("/", (req: Request, res: Response) => {
+homeTask01Router.get("/videos", (req: Request, res: Response) => {
   res.status(200).send(videos);
 });
 
-homeTask01Router.get("/:id", (req: Request, res: Response) => {
+homeTask01Router.get("/videos/:id", (req: Request, res: Response) => {
   const video = videos.find(p => p.id === +req.params.id);
   if (video) {
     res.status(200).send(video);
@@ -40,7 +40,7 @@ homeTask01Router.get("/:id", (req: Request, res: Response) => {
   }
 });
 
-homeTask01Router.post("/", (req: Request, res: Response) => {
+homeTask01Router.post("/videos", (req: Request, res: Response) => {
   const { title, author, availableResolutions } = req.body;
   const errors: { message: string; field: string }[] = [];
 
@@ -88,11 +88,11 @@ homeTask01Router.post("/", (req: Request, res: Response) => {
   res.status(201).send(newVideo);
 });
 
-homeTask01Router.put("/:id", (req: Request, res: Response) => {
+homeTask01Router.put("/videos/:id", (req: Request, res: Response) => {
   let video = videos.find(v => v.id === +req.params.id);
 
   if(!video) {
-    res.send(404);
+    res.sendStatus(404);
     return
   }
 
@@ -157,18 +157,23 @@ homeTask01Router.put("/:id", (req: Request, res: Response) => {
     publicationDate
   }
 
-  res.send(204);
+  res.sendStatus(204);
 
 })
 
-homeTask01Router.delete("/:id", (req: Request, res: Response) => {
+homeTask01Router.delete("/videos/:id", (req: Request, res: Response) => {
     for(let i = 0; i < videos.length; i++) {
     if(videos[i].id === +req.params.id) {
       videos.splice(i, 1);
-      res.send(204);
+      res.sendStatus(204);
       return
     }
   }
 
-  res.send(404);
+  res.sendStatus(404);
+})
+
+homeTask01Router.delete("/testing/all-data", (req: Request, res: Response) => {
+  videos = []
+  res.sendStatus(204);
 })

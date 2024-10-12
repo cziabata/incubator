@@ -12,7 +12,7 @@ const PORT = 3000;
 app.use(express_1.default.json());
 app.use("/products", products_router_1.productsRouter);
 app.use("/adresses", adresses_router_1.adressesRouter);
-app.use("/hometask_01/api/videos", hometask_01_1.homeTask01Router);
+app.use("/hometask_01/api", hometask_01_1.homeTask01Router);
 app.get("/", (req, res) => {
     res.send("Hello incubator!!!444");
 });

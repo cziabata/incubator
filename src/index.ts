@@ -10,7 +10,7 @@ app.use(express.json());
 
 app.use("/products", productsRouter);
 app.use("/adresses", adressesRouter);
-app.use("/hometask_01/api/videos", homeTask01Router);
+app.use("/hometask_01/api", homeTask01Router);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello incubator!!!444")

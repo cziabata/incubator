@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.homeTask01Router = void 0;
 const express_1 = require("express");
 const videos_1 = require("../types/videos");
-const videos = [
+let videos = [
     {
         "id": 0,
         "title": "string",
@@ -25,10 +25,10 @@ function isValidISODateString(dateString) {
     return !isNaN(date.getTime()) && dateString === date.toISOString();
 }
 exports.homeTask01Router = (0, express_1.Router)();
-exports.homeTask01Router.get("/", (req, res) => {
+exports.homeTask01Router.get("/videos", (req, res) => {
     res.status(200).send(videos);
 });
-exports.homeTask01Router.get("/:id", (req, res) => {
+exports.homeTask01Router.get("/videos/:id", (req, res) => {
     const video = videos.find(p => p.id === +req.params.id);
     if (video) {
         res.status(200).send(video);
@@ -37,7 +37,7 @@ exports.homeTask01Router.get("/:id", (req, res) => {
         res.status(404).send();
     }
 });
-exports.homeTask01Router.post("/", (req, res) => {
+exports.homeTask01Router.post("/videos", (req, res) => {
     const { title, author, availableResolutions } = req.body;
     const errors = [];
     if (typeof title !== 'string' || !title.trim()) {
@@ -81,10 +81,10 @@ exports.homeTask01Router.post("/", (req, res) => {
     videos.push(newVideo);
     res.status(201).send(newVideo);
 });
-exports.homeTask01Router.put("/:id", (req, res) => {
+exports.homeTask01Router.put("/videos/:id", (req, res) => {
     let video = videos.find(v => v.id === +req.params.id);
     if (!video) {
-        res.send(404);
+        res.sendStatus(404);
         return;
     }
     const { title, author, availableResolutions, canBeDownloaded, minAgeRestriction, publicationDate } = req.body;
@@ -139,15 +139,19 @@ exports.homeTask01Router.put("/:id", (req, res) => {
         canBeDownloaded,
         minAgeRestriction,
         publicationDate });
-    res.send(204);
+    res.sendStatus(204);
 });
-exports.homeTask01Router.delete("/:id", (req, res) => {
+exports.homeTask01Router.delete("/videos/:id", (req, res) => {
     for (let i = 0; i < videos.length; i++) {
         if (videos[i].id === +req.params.id) {
             videos.splice(i, 1);
-            res.send(204);
+            res.sendStatus(204);
             return;
         }
     }
-    res.send(404);
+    res.sendStatus(404);
+});
+exports.homeTask01Router.delete("/testing/all-data", (req, res) => {
+    videos = [];
+    res.sendStatus(204);
 });
