@@ -74,7 +74,7 @@ exports.homeTask01Router.post("/videos", (req, res) => {
         id: videos.length,
         title,
         author,
-        canBeDownloaded: true,
+        canBeDownloaded: false,
         minAgeRestriction: null,
         createdAt: createdAt.toISOString(),
         publicationDate: publicationDate.toISOString(),
