@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "watch": "tsc -w",
-    "dev": "nodemon --inspect dist/index.js"
+    "dev": "nodemon --inspect dist/index.js",
+    "jest": "jest -i"
   },
   "dependencies": {
     "cors": "^2.8.5",

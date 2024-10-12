@@ -3,14 +3,14 @@ import { VideoResolutions } from "../types/videos";
 
 let videos = [
   {
-    "id": 0,
-    "title": "string",
-    "author": "string",
-    "canBeDownloaded": true,
-    "minAgeRestriction": null,
-    "createdAt": "2024-10-12T10:00:23.592Z",
-    "publicationDate": "2024-10-12T10:00:23.592Z",
-    "availableResolutions": [
+    id: 0,
+    title: "first title",
+    author: "first author",
+    canBeDownloaded: true,
+    minAgeRestriction: null,
+    createdAt: "2024-10-12T10:00:23.592Z",
+    publicationDate: "2024-10-12T10:00:23.592Z",
+    availableResolutions: [
       "P144"
     ]
   }
@@ -96,7 +96,7 @@ homeTask01Router.put("/videos/:id", (req: Request, res: Response) => {
     return
   }
 
-  const { title, author, availableResolutions, canBeDownloaded, minAgeRestriction, publicationDate } = req.body;
+  let { title, author, availableResolutions, canBeDownloaded, minAgeRestriction, publicationDate } = req.body;
   const errors: { message: string; field: string }[] = [];
 
   if (typeof title !== 'string' || !title.trim()) {
@@ -112,30 +112,36 @@ homeTask01Router.put("/videos/:id", (req: Request, res: Response) => {
     errors.push({ message: "Field 'author' must not exceed 20 characters.", field: "author" });
   }
 
-  if (availableResolutions !== null) {
-    if (!Array.isArray(availableResolutions) || availableResolutions.length === 0) {
-      errors.push({ message: "Field 'availableResolutions' must be a non-empty array or null.", field: "availableResolutions" });
-    } else {
-      for (const resolution of availableResolutions) {
-        if (!isValidResolution(resolution)) {
-          errors.push({ message: `Invalid resolution: ${resolution}.`, field: "availableResolutions" });
-        }
+  if (availableResolutions === undefined) {
+    availableResolutions === null
+  } else if (availableResolutions === null) {
+    availableResolutions === null
+  } else if (!Array.isArray(availableResolutions) || availableResolutions.length === 0) {
+    errors.push({ message: "Field 'availableResolutions' must be a non-empty array or null.", field: "availableResolutions" });
+  } else {
+    for (const resolution of availableResolutions) {
+      if (!isValidResolution(resolution)) {
+        errors.push({ message: `Invalid resolution: ${resolution}.`, field: "availableResolutions" });
       }
     }
   }
 
-  if(canBeDownloaded !== null) {
+  if (canBeDownloaded === undefined) {
+    canBeDownloaded = false;
+  } else {
     if (typeof canBeDownloaded !== 'boolean') {
-      errors.push({ message: "Field 'canBeDownloaded' must be boolean", field: "canBeDownloaded" });
+      errors.push({ message: "Field 'canBeDownloaded' must be a boolean", field: "canBeDownloaded" });
     }
   }
 
-  if(minAgeRestriction !== null) {
-    if (typeof minAgeRestriction !== 'number' || !Number.isInteger(minAgeRestriction)) {
-      errors.push({ message: "Field 'minAgeRestriction' must be a integer", field: "minAgeRestriction" });
-    } else if (minAgeRestriction > 1 && minAgeRestriction < 18) {
-      errors.push({ message: "Field 'minAgeRestriction' must be form 1  to 18", field: "minAgeRestriction" });
-    }
+  if (minAgeRestriction === undefined) {
+    minAgeRestriction = null;
+  } else if (minAgeRestriction === null) {
+    minAgeRestriction === null
+  } else if (typeof minAgeRestriction !== 'number' || !Number.isInteger(minAgeRestriction)) {
+    errors.push({ message: "Field 'minAgeRestriction' must be an integer", field: "minAgeRestriction" });
+  } else if (minAgeRestriction < 1 || minAgeRestriction > 18) {
+    errors.push({ message: "Field 'minAgeRestriction' must be between 1 and 18", field: "minAgeRestriction" });
   }
 
   if (typeof publicationDate !== "string" || !isValidISODateString(publicationDate)) {
@@ -156,6 +162,8 @@ homeTask01Router.put("/videos/:id", (req: Request, res: Response) => {
     minAgeRestriction,
     publicationDate
   }
+
+  videos = videos.map(v => v.id === video.id ? video : v)
 
   res.sendStatus(204);
 
