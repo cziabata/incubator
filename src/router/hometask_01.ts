@@ -1,20 +1,20 @@
 import { Router, Request, Response } from "express";
 import { VideoResolutions } from "../types/videos";
 
-let videos = [
-  {
-    id: 0,
-    title: "first title",
-    author: "first author",
-    canBeDownloaded: true,
-    minAgeRestriction: null,
-    createdAt: "2024-10-12T10:00:23.592Z",
-    publicationDate: "2024-10-12T10:00:23.592Z",
-    availableResolutions: [
-      "P144"
-    ]
-  }
-];
+ // {
+  //   id: 0,
+  //   title: "first title",
+  //   author: "first author",
+  //   canBeDownloaded: true,
+  //   minAgeRestriction: null,
+  //   createdAt: "2024-10-12T10:00:23.592Z",
+  //   publicationDate: "2024-10-12T10:00:23.592Z",
+  //   availableResolutions: [
+  //     "P144"
+  //   ]
+  // }
+
+let videos: any  = [];
 
 function isValidResolution(resolution: string): boolean {
   return Object.values(VideoResolutions).includes(resolution as VideoResolutions);
@@ -32,7 +32,7 @@ homeTask01Router.get("/videos", (req: Request, res: Response) => {
 });
 
 homeTask01Router.get("/videos/:id", (req: Request, res: Response) => {
-  const video = videos.find(p => p.id === +req.params.id);
+  const video = videos.find((p: any) => p.id === +req.params.id);
   if (video) {
     res.status(200).send(video);
   } else {
@@ -93,7 +93,7 @@ homeTask01Router.post("/videos", (req: Request, res: Response) => {
 });
 
 homeTask01Router.put("/videos/:id", (req: Request, res: Response) => {
-  let video = videos.find(v => v.id === +req.params.id);
+  let video = videos.find((v: any) => v.id === +req.params.id);
 
   if(!video) {
     res.sendStatus(404);
@@ -167,7 +167,7 @@ homeTask01Router.put("/videos/:id", (req: Request, res: Response) => {
     publicationDate
   }
 
-  videos = videos.map(v => v.id === video.id ? video : v)
+  videos = videos.map((v: any) => v.id === video.id ? video : v)
 
   res.sendStatus(204);
 

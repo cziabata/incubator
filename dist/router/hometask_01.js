@@ -3,20 +3,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.homeTask01Router = void 0;
 const express_1 = require("express");
 const videos_1 = require("../types/videos");
-let videos = [
-    {
-        id: 0,
-        title: "first title",
-        author: "first author",
-        canBeDownloaded: true,
-        minAgeRestriction: null,
-        createdAt: "2024-10-12T10:00:23.592Z",
-        publicationDate: "2024-10-12T10:00:23.592Z",
-        availableResolutions: [
-            "P144"
-        ]
-    }
-];
+// {
+//   id: 0,
+//   title: "first title",
+//   author: "first author",
+//   canBeDownloaded: true,
+//   minAgeRestriction: null,
+//   createdAt: "2024-10-12T10:00:23.592Z",
+//   publicationDate: "2024-10-12T10:00:23.592Z",
+//   availableResolutions: [
+//     "P144"
+//   ]
+// }
+let videos = [];
 function isValidResolution(resolution) {
     return Object.values(videos_1.VideoResolutions).includes(resolution);
 }
@@ -29,7 +28,7 @@ exports.homeTask01Router.get("/videos", (req, res) => {
     res.status(200).send(videos);
 });
 exports.homeTask01Router.get("/videos/:id", (req, res) => {
-    const video = videos.find(p => p.id === +req.params.id);
+    const video = videos.find((p) => p.id === +req.params.id);
     if (video) {
         res.status(200).send(video);
     }
@@ -85,7 +84,7 @@ exports.homeTask01Router.post("/videos", (req, res) => {
     res.status(201).send(newVideo);
 });
 exports.homeTask01Router.put("/videos/:id", (req, res) => {
-    let video = videos.find(v => v.id === +req.params.id);
+    let video = videos.find((v) => v.id === +req.params.id);
     if (!video) {
         res.sendStatus(404);
         return;
@@ -153,7 +152,7 @@ exports.homeTask01Router.put("/videos/:id", (req, res) => {
         canBeDownloaded,
         minAgeRestriction,
         publicationDate });
-    videos = videos.map(v => v.id === video.id ? video : v);
+    videos = videos.map((v) => v.id === video.id ? video : v);
     res.sendStatus(204);
 });
 exports.homeTask01Router.delete("/videos/:id", (req, res) => {
