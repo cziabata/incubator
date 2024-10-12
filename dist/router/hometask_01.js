@@ -68,14 +68,17 @@ exports.homeTask01Router.post("/videos", (req, res) => {
         res.status(400).json({ errorsMessages: errors });
         return;
     }
+    const createdAt = new Date();
+    const publicationDate = new Date(createdAt);
+    publicationDate.setDate(createdAt.getDate() + 1);
     const newVideo = {
         id: videos.length,
         title,
         author,
         canBeDownloaded: true,
         minAgeRestriction: null,
-        createdAt: new Date().toISOString(),
-        publicationDate: new Date().toISOString(),
+        createdAt: createdAt.toISOString(),
+        publicationDate: publicationDate.toISOString(),
         availableResolutions,
     };
     videos.push(newVideo);

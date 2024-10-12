@@ -73,14 +73,18 @@ homeTask01Router.post("/videos", (req: Request, res: Response) => {
     return
   }
 
+  const createdAt = new Date();
+  const publicationDate = new Date(createdAt);
+  publicationDate.setDate(createdAt.getDate() + 1);
+
   const newVideo = {
     id: videos.length,
     title,
     author,
     canBeDownloaded: true,
     minAgeRestriction: null,
-    createdAt: new Date().toISOString(),
-    publicationDate: new Date().toISOString(),
+    createdAt: createdAt.toISOString(),
+    publicationDate: publicationDate.toISOString(),
     availableResolutions,
   };
 
