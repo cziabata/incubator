@@ -1,7 +1,6 @@
-import { app } from "./settings";
+import { SETTINGS } from "./config";
+import { app } from "./app";
 
-const PORT = 3000;
-
-app.listen(PORT, () => {
-  console.log(`App started on ${PORT} port`)
+app.listen(SETTINGS.PORT, () => {
+  console.log(`App started on ${SETTINGS.PORT} port`)
 })
