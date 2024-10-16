@@ -1,50 +1,37 @@
-import {Response, Request} from 'express';
-import {db} from '../db/db';
-
-const products = db.products;
+import { Response, Request } from 'express';
+import { productsRepository } from '../repositories/products-repository';
 
 export const getProductsController = (req: Request, res: Response) => {
-  if(req.params.title) {
-    const searchString = req.params.title;
-    res.send(products.filter(p => p.title.indexOf(searchString) > 1))
-  } else {
-    res.send(products)
-  }
-  res.send(products);
+  const foundProducts = productsRepository.getProducts(req.params.title);
+  res.send(foundProducts);
 }
 
 export const getProductByIdController = (req: Request, res: Response) => {
-  const product = products.find(p => p.id === +req.params.id);
-  if(product) res.send(product);
+  const product = productsRepository.getProductById(+req.params.id);
+  if (product) res.send(product);
   else res.send(404);
 }
 
 export const deleteProductController = (req: Request, res: Response) => {
-  for(let i = 0; i < products.length; i++) {
-    if(products[i].id === +req.params.id) {
-      products.splice(i, 1);
-      res.send(204);
-      return
-    }
+
+  const isDeleted = productsRepository.deleteProduct(+req.params.id);
+  if (isDeleted) {
+    res.send(204);
+  } else {
+    res.send(404);
   }
-  res.send(404);
 }
 
 export const createProductController = (req: Request, res: Response) => {
-  const newProduct = {
-    id: products.length,
-    title: req.body.title,
-  }
-
-  products.push(newProduct);
+  const newProduct = productsRepository.createProduct(req.body.title);
   res.status(201).send(newProduct);
 }
 
 export const updateProductController = (req: Request, res: Response) => {
-  const product = products.find(p => p.id === +req.params.id);
-  if(product){ 
-    product.title = req.body.title;
-    res.send(product)
+  const isProductUpdated = productsRepository.updateProduct(+req.params.id, req.body.title);
+  if (isProductUpdated) {
+    const updatedProduct = productsRepository.getProductById(+req.params.id)
+    res.send(updatedProduct)
   } else {
     res.send(404)
   };

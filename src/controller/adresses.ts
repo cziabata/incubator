@@ -1,14 +1,13 @@
 import {Response, Request} from 'express';
-import {db} from '../db/db';
-
-const adresses = db.adresses;
+import { adressesRepository } from '../repositories/adresses-repository';
 
 export const getAdressesController = (req: Request, res: Response) => {
+  const adresses = adressesRepository.getAdresses()
   res.send(adresses);
 }
 
 export const getAdresseByIdController = (req: Request, res: Response) => {
-  const adress = adresses.find(p => p.id === +req.params.id);
+  const adress = adressesRepository.getAdressById(+req.params.id);
   if(adress) res.send(adress);
   else res.send(404);
 }
