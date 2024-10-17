@@ -1,4 +1,5 @@
 import { db } from "../db/db";
+import { IProductView } from "../types/products";
 
 const products = db.products;
 
@@ -18,12 +19,12 @@ export const productsRepository = {
     }
 
     products.push(newProduct);
-    return (newProduct);
+    return this.mapToOutput(newProduct);
   },
 
   getProductById(id: number) {
     const product = products.find(p => p.id === id);
-    return product;
+    return product ? this.mapToOutput(product) : null;
   },
 
   updateProduct(id: number, title: string) {
@@ -44,5 +45,12 @@ export const productsRepository = {
       }
     }
    return false;
+  },
+
+  mapToOutput(product: IProductView): IProductView {
+    return {
+        id: product.id,
+        title: product.title,
+    }
   }
 }
