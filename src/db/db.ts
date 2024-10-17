@@ -1,9 +1,9 @@
-import { IAdressesDB } from "../types/adresses"
-import { IProductsDB } from "../types/products"
+import { IAdressView } from "../types/adresses"
+import { IProductView } from "../types/products"
 
 export type DBType = { 
-  products: IProductsDB[]
-  adresses: IAdressesDB[]
+  products: IProductView[]
+  adresses: IAdressView[]
 }
 
 export const db: DBType = {
