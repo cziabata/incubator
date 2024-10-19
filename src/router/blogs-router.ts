@@ -6,11 +6,13 @@ import {
   getBlogsController, 
   updateBlogController 
 } from "../controller/blogs";
+import { authMiddleware } from "../middlewares/global/auth-middleware";
+import { checkIdBlogValidators, createBlogValidators, updateBlogValidators } from "../middlewares/validators/blog-balidators";
 
 export const blogsRouter = Router();
 
 blogsRouter.get("/", getBlogsController);
-blogsRouter.get("/:id", getBlogByIdController);
-blogsRouter.post("/", createBlogController);
-blogsRouter.put("/:id", updateBlogController);
-blogsRouter.delete("/:id", deleteBlogController);
+blogsRouter.get("/:id", ...checkIdBlogValidators, getBlogByIdController);
+blogsRouter.post("/", authMiddleware, ...createBlogValidators, createBlogController);
+blogsRouter.put("/:id", authMiddleware, ...updateBlogValidators, updateBlogController);
+blogsRouter.delete("/:id", authMiddleware, ...checkIdBlogValidators, deleteBlogController);
