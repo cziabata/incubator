@@ -9,7 +9,7 @@ export const blogsRepository = {
   createBlog(data: IBlogInput) {
     const db = getDB();
     const newBlog = {
-      id: db.blogs.length + 1,
+      id: String(db.blogs.length + 1),
       name: data.name,
       description: data.description,
       websiteUrl: data.websiteUrl,
@@ -19,12 +19,12 @@ export const blogsRepository = {
     return this.mapToOutput(newBlog);
   },
 
-  getBlogById(id: number) {
+  getBlogById(id: string) {
     const blog = getDB().blogs.find(p => p.id === id);
     return blog ? this.mapToOutput(blog) : null;
   },
 
-  updateBlog(id: number, data: IBlogInput) {
+  updateBlog(id: string, data: IBlogInput) {
     const db = getDB();
     const index = db.blogs.findIndex(p => p.id === id);
     if (index !== -1) {
@@ -42,7 +42,7 @@ export const blogsRepository = {
     }
   },
 
-  deleteBlog(id: number) {
+  deleteBlog(id: string) {
     const db = getDB();
     const updatedBlogs = db.blogs.filter(blog => blog.id !== id);
     if (updatedBlogs.length !== db.blogs.length) {

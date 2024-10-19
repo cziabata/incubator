@@ -19,20 +19,22 @@ const contentInputValidator = body('content')
   .notEmpty().withMessage("Content is required")
   .isLength({ max: 1000 }).withMessage("Content should not exceed 1000 characters");
 
-const blogIdInputValidator = body('blogId')
-  .isString().withMessage("Blog Id must be a string")
-  .trim()
-  .notEmpty().withMessage("Description is required")
+// const blogIdInputValidator = body('blogId')
+//   .isString().withMessage("Blog Id must be a string")
+//   .trim()
+//   .notEmpty().withMessage("Description is required")
 
-const idParamValidator = param('id')
-  .isInt({ gt: 0 })
-  .withMessage("ID should be a positive integer");
+  const idParamValidator = param('id')
+  .isString()
+  .trim()
+  .notEmpty()
+  .withMessage("ID should be a non-empty string");
 
 export const createPostValidators = [
   titleInputValidator,
   shortDescriptionInputValidator,
   contentInputValidator,
-  blogIdInputValidator,
+  // blogIdInputValidator,
   checkErrorsMiddleware
 ]
 
@@ -41,7 +43,7 @@ export const updatePostValidators = [
   titleInputValidator,
   shortDescriptionInputValidator,
   contentInputValidator,
-  blogIdInputValidator,
+  // blogIdInputValidator,
   checkErrorsMiddleware
 ]
 

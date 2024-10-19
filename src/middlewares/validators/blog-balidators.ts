@@ -21,9 +21,11 @@ const websiteUrlInputValidator = body('websiteUrl')
   .matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/)
   .withMessage("Website URL must be a valid URL starting with https://");
 
-const idParamValidator = param('id')
-  .isInt({ gt: 0 })
-  .withMessage("ID should be a positive integer");
+  const idParamValidator = param('id')
+  .isString()
+  .trim()
+  .notEmpty()
+  .withMessage("ID should be a non-empty string");
 
 export const createBlogValidators = [
   nameInputValidator,

@@ -7,14 +7,14 @@ export const getBlogsController = (req: Request, res: Response) => {
 }
 
 export const getBlogByIdController = (req: Request, res: Response) => {
-  const blog = blogsRepository.getBlogById(+req.params.id);
+  const blog = blogsRepository.getBlogById(req.params.id);
   if (blog) res.send(blog);
   else res.send(404);
 }
 
 export const deleteBlogController = (req: Request, res: Response) => {
 
-  const isDeleted = blogsRepository.deleteBlog(+req.params.id);
+  const isDeleted = blogsRepository.deleteBlog(req.params.id);
   if (isDeleted) {
     res.send(204);
   } else {
@@ -38,10 +38,10 @@ export const updateBlogController = (req: Request, res: Response) => {
     description: req.body.description,
     websiteUrl: req.body.websiteUrl,
   }
-  const isBlogUpdated = blogsRepository.updateBlog(+req.params.id, prepareBody);
+  const isBlogUpdated = blogsRepository.updateBlog(req.params.id, prepareBody);
   if (isBlogUpdated) {
-    const updatedBlog = blogsRepository.getBlogById(+req.params.id)
-    res.send(updatedBlog)
+    const updatedBlog = blogsRepository.getBlogById(req.params.id)
+    res.status(204).send(updatedBlog)
   } else {
     res.send(404)
   };

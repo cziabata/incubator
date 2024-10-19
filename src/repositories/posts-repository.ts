@@ -9,7 +9,7 @@ export const postsRepository = {
   createPost(data: IPostInput) {
     const db = getDB();
     const newPost = {
-      id: db.posts.length + 1,
+      id: String(db.posts.length + 1),
       title: data.title,
       shortDescription: data.shortDescription,
       content: data.content,
@@ -21,12 +21,12 @@ export const postsRepository = {
     return this.mapToOutput(newPost);
   },
 
-  getPostById(id: number) {
+  getPostById(id: string) {
     const post = getDB().posts.find(p => p.id === id);
     return post ? this.mapToOutput(post) : null;
   },
 
-  updatePost(id: number, data: IPostInput) {
+  updatePost(id: string, data: IPostInput) {
     const db = getDB();
     const index = db.posts.findIndex(p => p.id === id);
     if (index !== -1) {
@@ -45,7 +45,7 @@ export const postsRepository = {
     }
   },
 
-  deletePost(id: number) {
+  deletePost(id: string) {
     const db = getDB();
     const updatedPosts = db.posts.filter(post => post.id !== id);
     if (updatedPosts.length !== db.posts.length) {

@@ -1,5 +1,5 @@
 export interface IPostView {
-  id: number,
+  id: string,
   title: string
   shortDescription: string
   content: string

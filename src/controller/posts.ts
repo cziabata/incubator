@@ -7,14 +7,14 @@ export const getPostsController = (req: Request, res: Response) => {
 }
 
 export const getPostByIdController = (req: Request, res: Response) => {
-  const post = postsRepository.getPostById(+req.params.id);
+  const post = postsRepository.getPostById(req.params.id);
   if (post) res.send(post);
   else res.send(404);
 }
 
 export const deletePostController = (req: Request, res: Response) => {
 
-  const isDeleted = postsRepository.deletePost(+req.params.id);
+  const isDeleted = postsRepository.deletePost(req.params.id);
   if (isDeleted) {
     res.send(204);
   } else {
@@ -40,9 +40,9 @@ export const updatePostController = (req: Request, res: Response) => {
     content: req.body.content,
     blogId: req.body.blogId,
   }
-  const isPostUpdated = postsRepository.updatePost(+req.params.id, prepareBody);
+  const isPostUpdated = postsRepository.updatePost(req.params.id, prepareBody);
   if (isPostUpdated) {
-    const updatedPost = postsRepository.getPostById(+req.params.id)
+    const updatedPost = postsRepository.getPostById(req.params.id)
     res.send(updatedPost)
   } else {
     res.send(404)
