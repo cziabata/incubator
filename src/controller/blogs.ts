@@ -41,7 +41,7 @@ export const updateBlogController = (req: Request, res: Response) => {
   const isBlogUpdated = blogsRepository.updateBlog(req.params.id, prepareBody);
   if (isBlogUpdated) {
     const updatedBlog = blogsRepository.getBlogById(req.params.id)
-    res.status(204).send(updatedBlog)
+    res.send(204) // .send(updatedBlog)
   } else {
     res.send(404)
   };

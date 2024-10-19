@@ -3,6 +3,8 @@ import { app } from '../src/app';
 import { db, setDB } from '../src/db/db';
 import { SETTINGS } from '../src/config';
 
+const codedAuth = Buffer.from('admin:qwerty').toString('base64');
+
 const BLOGS_PATH = SETTINGS.PATH.BLOGS;
 
 describe("Blogs API", () => {
@@ -19,6 +21,7 @@ describe("Blogs API", () => {
 
     const response = await request(app)
       .post(BLOGS_PATH)
+      .set({ 'Authorization': 'Basic ' + codedAuth })
       .send(newBlog)
       .expect(201);
 
@@ -27,7 +30,7 @@ describe("Blogs API", () => {
   });
 
   it("should update a blog", async () => {
-    setDB({ blogs: [{ id: 1, name: "Old Blog", description: "Old description", websiteUrl: "https://old.com" }] });
+    setDB({ blogs: [{ id: "1", name: "Old Blog", description: "Old description", websiteUrl: "https://old.com" }] });
 
     const updatedBlog = {
       name: "Updated Blog",
@@ -37,15 +40,16 @@ describe("Blogs API", () => {
 
     const response = await request(app)
       .put(`${BLOGS_PATH}/1`)
+      .set({ 'Authorization': 'Basic ' + codedAuth })
       .send(updatedBlog)
-      .expect(200);
+      .expect(204);
 
-    expect(response.body).toMatchObject(updatedBlog);
+    // expect(response.body).toMatchObject(updatedBlog);
     expect(db.blogs[0].name).toBe("Updated Blog");
   });
 
   it("should get all blogs", async () => {
-    setDB({ blogs: [{ id: 1, name: "Test Blog", description: "A blog for testing", websiteUrl: "https://test.com" }] });
+    setDB({ blogs: [{ id: "1", name: "Test Blog", description: "A blog for testing", websiteUrl: "https://test.com" }] });
 
     const response = await request(app)
       .get(BLOGS_PATH)
@@ -56,10 +60,11 @@ describe("Blogs API", () => {
   });
 
   it("should delete a blog", async () => {
-    setDB({ blogs: [{ id: 1, name: "To Delete", description: "This blog will be deleted", websiteUrl: "https://delete.com" }] });
+    setDB({ blogs: [{ id: "1", name: "To Delete", description: "This blog will be deleted", websiteUrl: "https://delete.com" }] });
 
     await request(app)
       .delete(`${BLOGS_PATH}/1`)
+      .set({ 'Authorization': 'Basic ' + codedAuth })
       .expect(204);
 
     expect(db.blogs).toHaveLength(0);

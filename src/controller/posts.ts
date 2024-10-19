@@ -43,7 +43,7 @@ export const updatePostController = (req: Request, res: Response) => {
   const isPostUpdated = postsRepository.updatePost(req.params.id, prepareBody);
   if (isPostUpdated) {
     const updatedPost = postsRepository.getPostById(req.params.id)
-    res.send(updatedPost)
+    res.send(204) // .send(updatedPost)
   } else {
     res.send(404)
   };

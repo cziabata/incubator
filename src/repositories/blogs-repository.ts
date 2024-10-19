@@ -52,6 +52,11 @@ export const blogsRepository = {
     return false;
   },
 
+  find(id: string) {
+    const db = getDB();
+    return db.blogs.find(b => b.id === id)
+},
+
   mapToOutput(blog: IBlogView): IBlogView {
     return {
       id: blog.id,
