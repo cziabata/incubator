@@ -8,6 +8,8 @@ const PATH = {
 export const SETTINGS = {
   PORT: process.env.PORT || 3000,
   ADMIN_AUTH: 'admin:qwerty',
+  MONGO_URL: "mongodb://0.0.0.0:27017",
+  DB_NAME: "incubator",
   PATH: {
     POSTS: `${PATH.HT_02}/posts`,
     BLOGS:  `${PATH.HT_02}/blogs`,
