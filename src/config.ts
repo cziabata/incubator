@@ -1,4 +1,4 @@
-import { config } from 'dotenv'
+import { config } from 'dotenv';
 config()
 
 const PATH = {
@@ -8,8 +8,8 @@ const PATH = {
 export const SETTINGS = {
   PORT: process.env.PORT || 3000,
   ADMIN_AUTH: 'admin:qwerty',
-  MONGO_URL: "mongodb://0.0.0.0:27017",
-  DB_NAME: "incubator",
+  MONGO_URL: process.env.MONGO_URL || "mongodb://0.0.0.0:27017",
+  DB_NAME: process.env.DB_NAME || "incubator",
   PATH: {
     POSTS: `${PATH.HT_02}/posts`,
     BLOGS:  `${PATH.HT_02}/blogs`,
