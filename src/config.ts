@@ -2,7 +2,8 @@ import { config } from 'dotenv';
 config()
 
 const PATH = {
-  HT_02: '/ht_02/api'
+  HT_02: '/ht_02/api',
+  HT_03: '/hometask_03/api'
 }
 
 export const SETTINGS = {
@@ -11,10 +12,10 @@ export const SETTINGS = {
   MONGO_URL: process.env.MONGO_URL || "mongodb://0.0.0.0:27017",
   DB_NAME: process.env.DB_NAME || "incubator",
   PATH: {
-    POSTS: `${PATH.HT_02}/posts`,
-    BLOGS:  `${PATH.HT_02}/blogs`,
+    POSTS: `${PATH.HT_03}/posts`,
+    BLOGS:  `${PATH.HT_03}/blogs`,
     PRODUCTS: '/products',
     ADRESSES: '/adresses',
-    CLEAR_ALL_02: `${PATH.HT_02}/testing/all-data`,
+    CLEAR_ALL_02: `${PATH.HT_03}/testing/all-data`,
   },
 }

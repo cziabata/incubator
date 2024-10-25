@@ -1,6 +1,6 @@
 import { body, param } from 'express-validator';
 import { checkErrorsMiddleware } from '../global/check-errors-middleware';
-import { blogsRepository } from '../../repositories/blogs-repository';
+import { blogsRepository } from '../../repositories/mongo/blogs-repository';
 
 const titleInputValidator = body('title')
   .isString().withMessage("Title must be a string")
@@ -21,8 +21,8 @@ const contentInputValidator = body('content')
   .isLength({ max: 1000 }).withMessage("Content should not exceed 1000 characters");
 
   export const blogIdValidator = body('blogId').isString().withMessage('not string')
-  .trim().custom(blogId => {
-      const blog = blogsRepository.find(blogId)
+  .trim().custom(async blogId => {
+      const blog = await blogsRepository.getBlogById(blogId)
       return !!blog
   }).withMessage('no blog')
 
