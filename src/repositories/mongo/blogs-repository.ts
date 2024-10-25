@@ -51,7 +51,7 @@ export const blogsRepository = {
       name: blog.name,
       description: blog.description,
       websiteUrl: blog.websiteUrl,
-      isMembership: blog.isMembership, 
+      isMembership: blog.isMembership,
     };
   }
 }
