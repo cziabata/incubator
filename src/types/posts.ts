@@ -5,6 +5,7 @@ export interface IPostView {
   content: string
   blogId: string
   blogName: string
+  createdAt: string
 }
 
 export interface IPostInput {

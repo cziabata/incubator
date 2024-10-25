@@ -9,6 +9,7 @@ export const postsRepository = {
   async createPost(data: IPostInput): Promise<IPostView> {
     const newPost = {
       id: String(Math.floor(Date.now() / 1000)),
+      createdAt: (new Date()).toISOString(),
       title: data.title,
       shortDescription: data.shortDescription,
       content: data.content,
@@ -48,6 +49,7 @@ export const postsRepository = {
   mapToOutput(post: IPostView): IPostView {
     return {
       id: post.id,
+      createdAt: post.createdAt,
       title: post.title,
       shortDescription: post.shortDescription,
       content: post.content,

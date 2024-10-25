@@ -10,9 +10,11 @@ export const blogsRepository = {
   async createBlog(data: IBlogInput): Promise<IBlogView> {
     const newBlog = {
       id: String(Math.floor(Date.now() / 1000)),
+      createdAt: (new Date()).toISOString(),
       name: data.name,
       description: data.description,
       websiteUrl: data.websiteUrl,
+      isMembership: false
     };
 
     await blogsCollection.insertOne(newBlog);
@@ -45,9 +47,11 @@ export const blogsRepository = {
   mapToOutput(blog: IBlogView): IBlogView {
     return {
       id: blog.id,
+      createdAt: blog.createdAt,
       name: blog.name,
       description: blog.description,
       websiteUrl: blog.websiteUrl,
+      isMembership: blog.isMembership,
     };
   }
 }

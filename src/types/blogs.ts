@@ -3,6 +3,8 @@ export interface IBlogView {
   name: string
   description: string
   websiteUrl: string
+  isMembership: boolean
+  createdAt: string
 }
 
 export interface IBlogInput {
