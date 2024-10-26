@@ -22,8 +22,10 @@ const contentInputValidator = body('content')
 
   export const blogIdValidator = body('blogId').isString().withMessage('not string')
   .trim().custom(async blogId => {
-      const blog = await blogsRepository.getBlogById(blogId)
-      return !!blog
+    const blog = await blogsRepository.getBlogById(blogId);
+    if (!blog) {
+      return Promise.reject('Blog with the given ID does not exist');
+    }
   }).withMessage('no blog')
 
   const idParamValidator = param('id')
