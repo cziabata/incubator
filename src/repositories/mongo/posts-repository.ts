@@ -3,7 +3,8 @@ import { IPostInput, IPostView } from "../../types/posts";
 
 export const postsRepository = {
   async getPosts(): Promise<IPostView[]> {
-    return postsCollection.find({}).toArray();
+    const posts = await postsCollection.find({}).toArray();
+    return posts.map(p => this.mapToOutput(p))
   },
 
   async createPost(data: IPostInput): Promise<IPostView> {

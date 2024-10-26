@@ -4,7 +4,8 @@ import { IBlogInput, IBlogView } from "../../types/blogs";
 
 export const blogsRepository = {
   async getBlogs(): Promise<IBlogView[]> {
-    return blogsCollection.find({}).toArray();
+    const blogs = await blogsCollection.find({}).toArray();
+    return blogs.map(b => this.mapToOutput(b));
   },
 
   async createBlog(data: IBlogInput): Promise<IBlogView> {
