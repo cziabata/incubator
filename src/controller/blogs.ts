@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import { blogsService } from '../domains/blogs-repository';
+import { blogsService } from '../domains/blogs-service';
 
 export const getBlogsController = async (req: Request, res: Response) => {
   const foundBlogs = await blogsService.getBlogs();
