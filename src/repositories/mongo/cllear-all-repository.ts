@@ -1,4 +1,4 @@
-import { blogsCollection, postsCollection } from "../db/mongoDb";
+import { blogsCollection, postsCollection } from "../../db/mongoDb";
 
 export const clearAllRepository = {
   async deleteAll() {

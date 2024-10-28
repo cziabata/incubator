@@ -1,5 +1,5 @@
 import {Response, Request} from 'express';
-import { adressesRepository } from '../repositories/adresses-repository';
+import { adressesRepository } from '../repositories/local-db/adresses-repository';
 
 export const getAdressesController = (req: Request, res: Response) => {
   const adresses = adressesRepository.getAdresses()

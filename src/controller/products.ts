@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import { productsRepository } from '../repositories/products-repository';
+import { productsRepository } from '../repositories/local-db/products-repository';
 
 export const getProductsController = (req: Request, res: Response) => {
   const foundProducts = productsRepository.getProducts(req.params.title);
