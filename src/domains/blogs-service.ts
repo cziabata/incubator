@@ -1,10 +1,11 @@
 
 import { blogsRepository } from "../repositories/mongo/blogs-repository";
-import { IBlogInput, IBlogView } from "../types/blogs";
+import { IBlogDto, IBlogInput, IBlogPostsDto, IBlogView, ISearchPostsByBlogIdValues, ISearchBlogsValues } from "../@types/blogs";
+import { postsRepository } from "../repositories/mongo/posts-repository";
 
 export const blogsService = {
-  async getBlogs(): Promise<IBlogView[]> {
-    return await blogsRepository.getBlogs();
+  async getBlogs(query: ISearchBlogsValues): Promise<IBlogDto> {
+    return await blogsRepository.getBlogs(query);
   },
 
   async createBlog(data: IBlogInput): Promise<IBlogView> {
@@ -31,4 +32,8 @@ export const blogsService = {
   async deleteBlog(id: string): Promise<boolean> {
     return await blogsRepository.deleteBlog(id)
   },
+
+  async getBlogPosts(query: ISearchPostsByBlogIdValues): Promise<IBlogPostsDto> {
+    return postsRepository.getPostsByBlogId(query)
+  }
 }

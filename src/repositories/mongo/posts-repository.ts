@@ -1,5 +1,6 @@
 import { postsCollection } from "../../db/mongoDb";
-import { IPostInput, IPostView } from "../../types/posts";
+import { IPostInput, IPostView } from "../../@types/posts";
+import { IBlogPostsDto, ISearchPostsByBlogIdValues } from "../../@types/blogs";
 
 export const postsRepository = {
   async getPosts(): Promise<IPostView[]> {
@@ -22,7 +23,7 @@ export const postsRepository = {
     return this.mapToOutput(newPost);
   },
 
-  async getPostById(id: string): Promise< IPostView | null> {
+  async getPostById(id: string): Promise<IPostView | null> {
     const post = await postsCollection.findOne({ id });
     return post ? this.mapToOutput(post) : null;
   },
@@ -45,6 +46,30 @@ export const postsRepository = {
   async deletePost(id: string): Promise<boolean> {
     const result = await postsCollection.deleteOne({ id });
     return result.deletedCount === 1;
+  },
+
+  async getPostsByBlogId(query: ISearchPostsByBlogIdValues): Promise<IBlogPostsDto> {
+    const { blogId, pageNumber, pageSize, sortBy, sortDirection } = query;
+
+    const filter = { blogId: { $regex: blogId } };
+
+    const totalCount = await postsCollection.countDocuments(filter);
+    const pagesCount = Math.ceil(totalCount / pageSize);
+
+    const foundedPostsByBlogId = await postsCollection
+      .find(filter)
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
+      .sort({ [sortBy]: sortDirection === "asc" ? "asc" : "desc" })
+      .toArray();
+
+    return {
+      items: foundedPostsByBlogId.map(p => this.mapToOutput(p)),
+      pagesCount,
+      page: pageNumber,
+      pageSize: pageSize,
+      totalCount,
+    }
   },
 
   mapToOutput(post: IPostView): IPostView {

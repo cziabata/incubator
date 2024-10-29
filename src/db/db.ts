@@ -1,7 +1,7 @@
-import { IAdressView } from "../types/adresses"
-import { IBlogView } from "../types/blogs"
-import { IPostView } from "../types/posts"
-import { IProductView } from "../types/products"
+import { IAdressView } from "../@types/adresses"
+import { IBlogView } from "../@types/blogs"
+import { IPostView } from "../@types/posts"
+import { IProductView } from "../@types/products"
 
 export type DBType = { 
   products: IProductView[]

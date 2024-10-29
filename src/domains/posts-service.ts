@@ -1,5 +1,5 @@
 import { postsRepository } from "../repositories/mongo/posts-repository";
-import { IPostInput, IPostView } from "../types/posts";
+import { IPostInput, IPostView } from "../@types/posts";
 
 export const postsService = {
 

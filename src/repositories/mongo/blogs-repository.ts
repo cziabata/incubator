@@ -1,11 +1,36 @@
 
 import { blogsCollection } from "../../db/mongoDb";
-import { IBlogInput, IBlogView } from "../../types/blogs";
+import { IBlogDto, IBlogInput, IBlogView } from "../../@types/blogs";
+import { ISearchBlogsValues } from "../../@types/blogs";
 
 export const blogsRepository = {
-  async getBlogs(): Promise<IBlogView[]> {
-    const blogs = await blogsCollection.find({}).toArray();
-    return blogs.map(b => this.mapToOutput(b));
+  async getBlogs(query: ISearchBlogsValues): Promise<IBlogDto> {
+
+    const { searchNameTerm, pageNumber, pageSize, sortBy, sortDirection } = query;
+
+    const filter: any = {};
+
+    if (searchNameTerm) {
+      filter.name = { $regex: searchNameTerm, $options: "i" }
+    }
+
+    const totalCount = await blogsCollection.countDocuments(filter);
+    const pagesCount = Math.ceil(totalCount / pageSize);
+
+    const blogs = await blogsCollection
+      .find(filter)
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
+      .sort({ [sortBy]: sortDirection === "asc" ? "asc" : "desc" })
+      .toArray();
+
+    return {
+      items: blogs.map(b => this.mapToOutput(b)),
+      pagesCount,
+      page: pageNumber,
+      pageSize: pageSize,
+      totalCount,
+    }
   },
 
   async createBlog(data: IBlogInput): Promise<IBlogView> {

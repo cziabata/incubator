@@ -1,12 +1,19 @@
 import { Response, Request } from 'express';
 import { blogsService } from '../domains/blogs-service';
+import { getPaginationValues } from '../utils/pagination-helper';
+import { IPaginationValues } from '../@types/shared';
 
 export const getBlogsController = async (req: Request, res: Response) => {
-  const foundBlogs = await blogsService.getBlogs();
+  const paginationValues: IPaginationValues = getPaginationValues(req.query);
+  const foundBlogs = await blogsService.getBlogs({
+    ...paginationValues,
+    searchNameTerm: req.query.searchNameTerm ? req.query.searchNameTerm : null,
+  });
   res.send(foundBlogs);
 }
 
 export const getBlogByIdController = async (req: Request, res: Response) => {
+
   const blog = await blogsService.getBlogById(req.params.id);
   if (blog) res.send(blog);
   else res.send(404);
@@ -45,4 +52,15 @@ export const updateBlogController = async (req: Request, res: Response) => {
   } else {
     res.send(404)
   };
+}
+
+export const getBlogPostsController = async (req: Request, res: Response) => {
+  const paginationValues: IPaginationValues = getPaginationValues(req.query);
+  const blogId = req.params.id;
+  const foundBlogs = await blogsService.getBlogPosts({
+    ...paginationValues,
+    blogId
+  });
+  if (foundBlogs) res.send(foundBlogs);
+  else res.send(404);
 }

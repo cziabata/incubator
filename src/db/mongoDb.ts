@@ -1,8 +1,8 @@
 import { Collection, MongoClient, ServerApiVersion }from 'mongodb';
 import * as dotenv from "dotenv";
 import { SETTINGS } from '../config';
-import { IBlogView } from '../types/blogs';
-import { IPostView } from '../types/posts';
+import { IBlogView } from '../@types/blogs';
+import { IPostView } from '../@types/posts';
 dotenv.config();
 
 export let blogsCollection: Collection<IBlogView>;

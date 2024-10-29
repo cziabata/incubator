@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from "express";
 import { validationResult } from "express-validator";
-import { FieldNamesType } from "../../types/shared";
+import { FieldNamesType } from "../../@types/shared";
 
 export const checkErrorsMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);

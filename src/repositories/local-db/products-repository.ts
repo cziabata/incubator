@@ -1,5 +1,5 @@
 import { db } from "../../db/db";
-import { IProductView } from "../../types/products";
+import { IProductView } from "../../@types/products";
 
 const products = db.products;
 
