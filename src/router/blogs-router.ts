@@ -21,4 +21,4 @@ blogsRouter.put("/:id", authMiddleware, ...updateBlogValidators, updateBlogContr
 blogsRouter.delete("/:id", authMiddleware, ...checkIdBlogValidators, deleteBlogController);
 
 blogsRouter.get("/:id/posts", ...checkIdBlogValidators, getBlogPostsController);
-blogsRouter.post("/:id/posts", ...createPostForBlogValidators, createPostForBlogController);
+blogsRouter.post("/:id/posts", authMiddleware, ...createPostForBlogValidators, createPostForBlogController);

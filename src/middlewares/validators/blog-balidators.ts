@@ -1,5 +1,6 @@
 import { body, param } from 'express-validator';
 import { checkErrorsMiddleware } from '../global/check-errors-middleware';
+import { blogsRepository } from '../../repositories/mongo/blogs-repository';
 
 const nameInputValidator = body('name')
   .isString().withMessage("Name must be a string")
@@ -27,6 +28,19 @@ const websiteUrlInputValidator = body('websiteUrl')
   .notEmpty()
   .withMessage("ID should be a non-empty string");
 
+  const blogIdParamValidator = param('id')
+  .isString()
+  .trim()
+  .notEmpty()
+  .custom(async (id, { req }) => {
+    const blog = await blogsRepository.getBlogById(id);
+    if (!blog) {
+      req.statusCode = 404;
+      return Promise.reject('Blog with the given ID does not exist');
+    }
+  })
+  .withMessage('Blog with the given ID does not exist');
+
 export const createBlogValidators = [
   nameInputValidator,
   descriptionInputValidator,
@@ -43,6 +57,6 @@ export const updateBlogValidators = [
 ]
 
 export const checkIdBlogValidators = [
-  idParamValidator,
+  blogIdParamValidator,
   checkErrorsMiddleware
 ]

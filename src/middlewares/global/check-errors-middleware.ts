@@ -5,11 +5,12 @@ import { FieldNamesType } from "../../@types/shared";
 export const checkErrorsMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const eArray = errors.array({ onlyFirstError: true }) as { path: FieldNamesType, msg: string }[]
-    res.status(400).json({
+    const status = req.statusCode === 404 ? 404 : 400;
+    const eArray = errors.array({ onlyFirstError: true }) as { path: FieldNamesType, msg: string }[];
+    res.status(status).json({
       errorsMessages: eArray.map(x => ({ field: x.path, message: x.msg }))
-    })
-    return
+    });
+    return;
   }
   next();
-}
+};
