@@ -2,6 +2,8 @@
 import { blogsRepository } from "../repositories/mongo/blogs-repository";
 import { IBlogDto, IBlogInput, IBlogPostsDto, IBlogView, ISearchPostsByBlogIdValues, ISearchBlogsValues } from "../@types/blogs";
 import { postsRepository } from "../repositories/mongo/posts-repository";
+import { IPostInput, IPostView } from "../@types/posts";
+import { postsService } from "./posts-service";
 
 export const blogsService = {
   async getBlogs(query: ISearchBlogsValues): Promise<IBlogDto> {
@@ -35,5 +37,9 @@ export const blogsService = {
 
   async getBlogPosts(query: ISearchPostsByBlogIdValues): Promise<IBlogPostsDto> {
     return postsRepository.getPostsByBlogId(query)
+  },
+
+  async createPostForBlog(data: IPostInput): Promise<IPostView> {
+    return postsService.createPost(data);
   }
 }

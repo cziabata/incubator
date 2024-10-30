@@ -28,6 +28,14 @@ const contentInputValidator = body('content')
     }
   }).withMessage('no blog')
 
+  export const blogIdParamValidator = param('id').isString()
+  .trim().notEmpty().custom(async id => {
+    const blog = await blogsRepository.getBlogById(id);
+    if (!blog) {
+      return Promise.reject('Blog with the given ID does not exist');
+    }
+  }).withMessage('no blog')
+
   const idParamValidator = param('id')
   .isString()
   .trim()
@@ -39,6 +47,14 @@ export const createPostValidators = [
   shortDescriptionInputValidator,
   contentInputValidator,
   blogIdValidator,
+  checkErrorsMiddleware
+]
+
+export const createPostForBlogValidators = [
+  titleInputValidator,
+  shortDescriptionInputValidator,
+  contentInputValidator,
+  blogIdParamValidator,
   checkErrorsMiddleware
 ]
 

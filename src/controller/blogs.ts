@@ -2,6 +2,7 @@ import { Response, Request } from 'express';
 import { blogsService } from '../domains/blogs-service';
 import { getPaginationValues } from '../utils/pagination-helper';
 import { IPaginationValues } from '../@types/shared';
+import { IPostInput } from '../@types/posts';
 
 export const getBlogsController = async (req: Request, res: Response) => {
   const paginationValues: IPaginationValues = getPaginationValues(req.query);
@@ -63,4 +64,15 @@ export const getBlogPostsController = async (req: Request, res: Response) => {
   });
   if (foundBlogs) res.send(foundBlogs);
   else res.send(404);
+}
+
+export const createPostForBlogController = async (req: Request, res: Response) => {
+  const prepareBody: IPostInput = {
+    title: req.body.title,
+    shortDescription: req.body.shortDescription,
+    content: req.body.content,
+    blogId: req.params.id,
+  }
+  const newPost = await blogsService.createPostForBlog(prepareBody);
+  res.status(201).send(newPost);
 }
