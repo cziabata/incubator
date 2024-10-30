@@ -19,9 +19,9 @@ export const blogsRepository = {
 
     const blogs = await blogsCollection
       .find(filter)
+      .sort({ [sortBy]: sortDirection === "asc" ? "asc" : "desc" })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
-      .sort({ [sortBy]: sortDirection === "asc" ? "asc" : "desc" })
       .toArray();
 
     return {
