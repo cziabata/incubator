@@ -16,7 +16,7 @@ export const postsRepository = {
       .find(filter)
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
-      .sort({ [sortBy]: sortDirection === "asc" ? "asc" : "desc" })
+      .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
       .toArray();
 
     return {
@@ -79,9 +79,9 @@ export const postsRepository = {
 
     const foundedPostsByBlogId = await postsCollection
       .find(filter)
+      .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
-      .sort({ [sortBy]: sortDirection === "asc" ? "asc" : "desc" })
       .toArray();
 
     return {

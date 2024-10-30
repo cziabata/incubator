@@ -28,13 +28,18 @@ const contentInputValidator = body('content')
     }
   }).withMessage('no blog')
 
-  export const blogIdParamValidator = param('id').isString()
-  .trim().notEmpty().custom(async id => {
+  const blogIdParamValidator = param('id')
+  .isString()
+  .trim()
+  .notEmpty()
+  .custom(async (id, { req }) => {
     const blog = await blogsRepository.getBlogById(id);
     if (!blog) {
+      req.statusCode = 404;
       return Promise.reject('Blog with the given ID does not exist');
     }
-  }).withMessage('no blog')
+  })
+  .withMessage('Blog with the given ID does not exist');
 
   const idParamValidator = param('id')
   .isString()
