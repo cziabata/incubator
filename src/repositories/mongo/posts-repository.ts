@@ -1,11 +1,32 @@
 import { postsCollection } from "../../db/mongoDb";
-import { IPostInput, IPostView } from "../../@types/posts";
+import { IPostInput, IPostsDto, IPostView, ISearchPostsValues } from "../../@types/posts";
 import { IBlogPostsDto, ISearchPostsByBlogIdValues } from "../../@types/blogs";
 
 export const postsRepository = {
-  async getPosts(): Promise<IPostView[]> {
-    const posts = await postsCollection.find({}).toArray();
-    return posts.map(p => this.mapToOutput(p))
+  async getPosts(query: ISearchPostsValues): Promise<IPostsDto> {
+
+    const { pageNumber, pageSize, sortBy, sortDirection } = query;
+
+    const filter: any = {};
+
+    const totalCount = await postsCollection.countDocuments(filter);
+    const pagesCount = Math.ceil(totalCount / pageSize);
+
+    const posts = await postsCollection
+      .find(filter)
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
+      .sort({ [sortBy]: sortDirection === "asc" ? "asc" : "desc" })
+      .toArray();
+
+    return {
+      items: posts.map(p => this.mapToOutput(p)),
+      pagesCount,
+      page: pageNumber,
+      pageSize: pageSize,
+      totalCount,
+    }
+
   },
 
   async createPost(data: IPostInput): Promise<IPostView> {

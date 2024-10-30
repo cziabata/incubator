@@ -1,8 +1,13 @@
 import { Response, Request } from 'express';
 import { postsService } from '../domains/posts-service';
+import { IPaginationValues } from '../@types/shared';
+import { getPaginationValues } from '../utils/pagination-helper';
 
 export const getPostsController = async (req: Request, res: Response) => {
-  const foundPosts = await postsService.getPosts();
+  
+  const paginationValues: IPaginationValues = getPaginationValues(req.query);
+
+  const foundPosts = await postsService.getPosts(paginationValues);
   res.send(foundPosts);
 }
 

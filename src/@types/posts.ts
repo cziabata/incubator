@@ -1,3 +1,5 @@
+import { IPaginationResultValues, IPaginationValues } from "./shared"
+
 export interface IPostView {
   id: string,
   title: string
@@ -13,4 +15,12 @@ export interface IPostInput {
   shortDescription: string
   content: string
   blogId: string
+}
+
+export interface ISearchPostsValues extends IPaginationValues {
+ 
+}
+
+export interface IPostsDto extends IPaginationResultValues {
+  items: IPostView[]
 }

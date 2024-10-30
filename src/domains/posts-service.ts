@@ -1,10 +1,10 @@
 import { postsRepository } from "../repositories/mongo/posts-repository";
-import { IPostInput, IPostView } from "../@types/posts";
+import { IPostInput, IPostsDto, IPostView, ISearchPostsValues } from "../@types/posts";
 
 export const postsService = {
 
-  async getPosts(): Promise<IPostView[]> {
-    return await postsRepository.getPosts();
+  async getPosts(query: ISearchPostsValues): Promise<IPostsDto> {
+    return await postsRepository.getPosts(query);
   },
 
   async createPost(data: IPostInput): Promise<IPostView> {
