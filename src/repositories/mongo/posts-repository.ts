@@ -14,7 +14,7 @@ export const postsRepository = {
 
     const posts = await postsCollection
       .find(filter)
-      .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1, createdAt: -1 })
+      .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .toArray();
