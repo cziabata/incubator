@@ -33,16 +33,7 @@ export const blogsRepository = {
     }
   },
 
-  async createBlog(data: IBlogInput): Promise<IBlogView> {
-    const newBlog = {
-      id: String(Math.floor(Date.now() / 1000)),
-      createdAt: (new Date()).toISOString(),
-      name: data.name,
-      description: data.description,
-      websiteUrl: data.websiteUrl,
-      isMembership: false
-    };
-
+  async createBlog(newBlog: IBlogView): Promise<IBlogView> {
     await blogsCollection.insertOne(newBlog);
     return this.mapToOutput(newBlog);
   },

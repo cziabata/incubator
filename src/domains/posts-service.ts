@@ -1,5 +1,6 @@
 import { postsRepository } from "../repositories/mongo/posts-repository";
 import { IPostInput, IPostsDto, IPostView, ISearchPostsValues } from "../@types/posts";
+import { blogsService } from "./blogs-service";
 
 export const postsService = {
 
@@ -8,6 +9,9 @@ export const postsService = {
   },
 
   async createPost(data: IPostInput): Promise<IPostView> {
+
+    const relatedBlog = await blogsService.getBlogById(data.blogId);
+
     const newPost = {
       id: String(Math.floor(Date.now() / 1000)),
       createdAt: (new Date()).toISOString(),
@@ -15,7 +19,7 @@ export const postsService = {
       shortDescription: data.shortDescription,
       content: data.content,
       blogId: data.blogId,
-      blogName: "",
+      blogName: relatedBlog?.name || "",
     };
 
     return await postsRepository.createPost(newPost);
