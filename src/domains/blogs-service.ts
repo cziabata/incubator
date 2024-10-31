@@ -12,8 +12,8 @@ export const blogsService = {
 
   async createBlog(data: IBlogInput): Promise<IBlogView> {
     const newBlog = {
-      id: String(Math.floor(Date.now() / 1000)),
-      createdAt: (new Date()).toISOString(),
+      id: String(Date.now()),
+      createdAt: new Date().toISOString(),
       name: data.name,
       description: data.description,
       websiteUrl: data.websiteUrl,

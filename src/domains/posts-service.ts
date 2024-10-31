@@ -13,8 +13,8 @@ export const postsService = {
     const relatedBlog = await blogsService.getBlogById(data.blogId);
 
     const newPost = {
-      id: String(Math.floor(Date.now() / 1000)),
-      createdAt: (new Date()).toISOString(),
+      id: String(Date.now()),
+      createdAt: new Date().toISOString(),
       title: data.title,
       shortDescription: data.shortDescription,
       content: data.content,
