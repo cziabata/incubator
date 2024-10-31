@@ -29,17 +29,7 @@ export const postsRepository = {
 
   },
 
-  async createPost(data: IPostInput): Promise<IPostView> {
-    const newPost = {
-      id: String(Math.floor(Date.now() / 1000)),
-      createdAt: (new Date()).toISOString(),
-      title: data.title,
-      shortDescription: data.shortDescription,
-      content: data.content,
-      blogId: data.blogId,
-      blogName: "",
-    };
-
+  async createPost(newPost: IPostView): Promise<IPostView> {
     await postsCollection.insertOne(newPost);
     return this.mapToOutput(newPost);
   },
