@@ -13,6 +13,14 @@ export interface IUserInput {
   email: string
 }
 
+export interface INewUserDto {
+  id: string
+  login:string
+  email: string
+  createdAt: string
+  password: string
+}
+
 export interface IUsersDto extends IPaginationResultValues {
   items: IUserView[]
 }

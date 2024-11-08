@@ -3,10 +3,12 @@ import * as dotenv from "dotenv";
 import { SETTINGS } from '../config';
 import { IBlogView } from '../@types/blogs';
 import { IPostView } from '../@types/posts';
+import { IUserView } from '../@types/users';
 dotenv.config();
 
 export let blogsCollection: Collection<IBlogView>;
 export let postsCollection: Collection<IPostView>;
+export let usersCollection: Collection<IUserView>;
 
 export async function runDb(url: string ) {
 
@@ -21,6 +23,7 @@ export async function runDb(url: string ) {
 
   blogsCollection = db.collection<IBlogView>("blogs");
   postsCollection = db.collection<IPostView>("posts");
+  usersCollection = db.collection<IUserView>("users");
 
   try {
     await client.connect();
