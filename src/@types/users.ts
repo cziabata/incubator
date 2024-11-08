@@ -13,7 +13,7 @@ export interface IUserInput {
   email: string
 }
 
-export interface INewUserDto {
+export interface IUserDB {
   id: string
   login:string
   email: string

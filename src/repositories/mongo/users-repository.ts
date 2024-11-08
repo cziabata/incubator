@@ -1,14 +1,14 @@
 import { ObjectId, WithId } from "mongodb";
-import { INewUserDto, IUserView } from "../../@types/users";
+import { IUserDB, IUserView } from "../../@types/users";
 import { usersCollection } from "../../db/mongoDb";
 
 export const usersRepository = {
-  async createUser(newUser: INewUserDto): Promise<string> {
+  async createUser(newUser: IUserDB): Promise<string> {
     const createdUser = await usersCollection.insertOne(newUser);
     return createdUser.insertedId.toString();
   },
 
-  async findByLoginOrEmail(loginOrEmail: string): Promise<WithId<IUserView> | null> {
+  async findByLoginOrEmail(loginOrEmail: string): Promise<WithId<IUserDB> | null> {
     return usersCollection.findOne({
       $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
     });
@@ -20,7 +20,7 @@ export const usersRepository = {
     return isDeleted.deletedCount === 1;
   },
 
-  async findUserById(id: string): Promise<WithId<IUserView> | null> {
+  async findUserById(id: string): Promise<WithId<IUserDB> | null> {
     if (!this._checkObjectId(id)) return null;
     return usersCollection.findOne({ _id: new ObjectId(id) });
   },

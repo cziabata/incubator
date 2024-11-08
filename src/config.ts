@@ -15,6 +15,7 @@ export const SETTINGS = {
     POSTS: `${PATH.HT_03}/posts`,
     BLOGS:  `${PATH.HT_03}/blogs`,
     USERS: `${PATH.HT_03}/users`,
+    AUTH: `${PATH.HT_03}/auth`,
     PRODUCTS: '/products',
     ADRESSES: '/adresses',
     CLEAR_ALL_02: `${PATH.HT_03}/testing/all-data`,

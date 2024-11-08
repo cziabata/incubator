@@ -1,4 +1,4 @@
-import { INewUserDto, IUserInput } from "../@types/users";
+import { IUserDB, IUserInput } from "../@types/users";
 import { usersRepository } from "../repositories/mongo/users-repository";
 import { bcryptService } from "../utils/bcrypt.service";
 
@@ -7,7 +7,7 @@ export const usersService = {
 
     const hashPassword = await bcryptService.generateHash(data.password);
 
-    const newUser: INewUserDto = {
+    const newUser: IUserDB = {
       id: String(Date.now()),
       createdAt: new Date().toISOString(),
       login: data.login,
