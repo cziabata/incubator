@@ -14,7 +14,7 @@ export const usersQueryRepository = {
       filter.login = { $regex: searchLoginTerm, $options: "i" }
     }
     if (searchEmailTerm) {
-      filter.email = { $regex: searchLoginTerm, $options: "i" }
+      filter.email = { $regex: searchEmailTerm, $options: "i" }
     }
 
     const totalCount = await usersCollection.countDocuments(filter);
