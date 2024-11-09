@@ -10,11 +10,14 @@ export const usersQueryRepository = {
 
     const filter: any = {};
 
-    if (searchLoginTerm) {
-      filter.login = { $regex: searchLoginTerm, $options: "i" }
-    }
-    if (searchEmailTerm) {
-      filter.email = { $regex: searchEmailTerm, $options: "i" }
+    if (searchLoginTerm || searchEmailTerm) {
+      filter.$or = [];
+      if (searchLoginTerm) {
+        filter.$or.push({ login: { $regex: searchLoginTerm, $options: "i" } });
+      }
+      if (searchEmailTerm) {
+        filter.$or.push({ email: { $regex: searchEmailTerm, $options: "i" } });
+      }
     }
 
     const totalCount = await usersCollection.countDocuments(filter);
