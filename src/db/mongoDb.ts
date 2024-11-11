@@ -4,11 +4,13 @@ import { SETTINGS } from '../config';
 import { IBlogView } from '../@types/blogs';
 import { IPostView } from '../@types/posts';
 import { IUserDB } from '../@types/users';
+import { ICommentView } from '../@types/comments';
 dotenv.config();
 
 export let blogsCollection: Collection<IBlogView>;
 export let postsCollection: Collection<IPostView>;
 export let usersCollection: Collection<IUserDB>;
+export let commentsCollection: Collection<ICommentView>;
 
 export async function runDb(url: string ) {
 
@@ -24,6 +26,7 @@ export async function runDb(url: string ) {
   blogsCollection = db.collection<IBlogView>("blogs");
   postsCollection = db.collection<IPostView>("posts");
   usersCollection = db.collection<IUserDB>("users");
+  commentsCollection = db.collection<ICommentView>("comments");
 
   try {
     await client.connect();
