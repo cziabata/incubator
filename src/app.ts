@@ -15,7 +15,7 @@ export const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use(SETTINGS.PATH.CLEAR_ALL_02, clearAllRouter);
+app.use(SETTINGS.PATH.CLEAR_ALL, clearAllRouter);
 
 app.use(SETTINGS.PATH.PRODUCTS, productsRouter);
 app.use(SETTINGS.PATH.ADRESSES, adressesRouter);

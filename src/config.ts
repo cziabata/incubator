@@ -2,23 +2,33 @@ import { config } from 'dotenv';
 config()
 
 const PATH = {
-  HT_02: '/ht_02/api',
-  HT_03: '/hometask_03/api'
+  HOMETASK_API: '/hometask/api'
 }
 
 export const SETTINGS = {
+
   PORT: process.env.PORT || 3000,
   ADMIN_AUTH: 'admin:qwerty',
   MONGO_URL: process.env.MONGO_URL || "mongodb://0.0.0.0:27017",
   DB_NAME: process.env.DB_NAME || "incubator",
+  AC_SECRET: process.env.AC_SECRET as string,
+  AC_TIME: process.env.AC_TIME as string,
+  RT_SECRET: process.env.RT_SECRET,
+
   PATH: {
-    POSTS: `${PATH.HT_03}/posts`,
-    BLOGS:  `${PATH.HT_03}/blogs`,
-    USERS: `${PATH.HT_03}/users`,
-    COMMENTS: `${PATH.HT_03}/comments`,
-    AUTH: `${PATH.HT_03}/auth`,
+
+    AUTH: `${PATH.HOMETASK_API}/auth`,
+
+    CLEAR_ALL: `${PATH.HOMETASK_API}/testing/all-data`,
+
+    POSTS: `${PATH.HOMETASK_API}/posts`,
+    BLOGS:  `${PATH.HOMETASK_API}/blogs`,
+    USERS: `${PATH.HOMETASK_API}/users`,
+    COMMENTS: `${PATH.HOMETASK_API}/comments`,
+    
     PRODUCTS: '/products',
     ADRESSES: '/adresses',
-    CLEAR_ALL_02: `${PATH.HT_03}/testing/all-data`,
+    
   },
+
 }

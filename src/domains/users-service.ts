@@ -1,6 +1,6 @@
 import { IUserDB, IUserInput } from "../@types/users";
 import { usersRepository } from "../repositories/mongo/users-repository";
-import { bcryptService } from "../utils/bcrypt.service";
+import { bcryptService } from "../application/bcrypt.service";
 
 export const usersService = {
   async createUser(data: IUserInput): Promise<string> {

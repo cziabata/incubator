@@ -1,7 +1,7 @@
 import { WithId } from "mongodb";
 import { IUserDB } from "../@types/users";
 import { usersRepository } from "../repositories/mongo/users-repository";
-import { bcryptService } from "../utils/bcrypt.service";
+import { bcryptService } from "../application/bcrypt.service";
 
 export const authService = {
   async loginUser(loginOrEmail: string, password: string): Promise<WithId<IUserDB> | null> {
