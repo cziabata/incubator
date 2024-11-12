@@ -1,5 +1,5 @@
 import { body, param } from 'express-validator';
-import { checkErrorsMiddleware } from '../global/check-errors-middleware';
+import { checkValidationErrorsMiddleware } from './check-validation-errors-middleware';
 import { blogsRepository } from '../../repositories/mongo/blogs-repository';
 
 const titleInputValidator = body('title')
@@ -52,7 +52,7 @@ export const createPostValidators = [
   shortDescriptionInputValidator,
   contentInputValidator,
   blogIdValidator,
-  checkErrorsMiddleware
+  checkValidationErrorsMiddleware
 ]
 
 export const createPostForBlogValidators = [
@@ -60,7 +60,7 @@ export const createPostForBlogValidators = [
   shortDescriptionInputValidator,
   contentInputValidator,
   blogIdParamValidator,
-  checkErrorsMiddleware
+  checkValidationErrorsMiddleware
 ]
 
 export const updatePostValidators = [
@@ -69,10 +69,10 @@ export const updatePostValidators = [
   shortDescriptionInputValidator,
   contentInputValidator,
   blogIdValidator,
-  checkErrorsMiddleware
+  checkValidationErrorsMiddleware
 ]
 
 export const checkIdPostValidators = [
   idParamValidator,
-  checkErrorsMiddleware
+  checkValidationErrorsMiddleware
 ]

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { SETTINGS } from "../../config";
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const basicAuthGuard = (req: Request, res: Response, next: NextFunction) => {
   const auth = req.headers['authorization'] as string; // 'Basic xxxx'
 
   if (!auth || !auth.startsWith('Basic ')) {

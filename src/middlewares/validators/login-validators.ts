@@ -1,6 +1,6 @@
 import { body } from "express-validator";
 import { passwordInputValidation } from "./user-validators";
-import { checkErrorsMiddleware } from "../global/check-errors-middleware";
+import { checkValidationErrorsMiddleware } from "./check-validation-errors-middleware";
 
 export const loginOrEmailValidation = body("loginOrEmail")
   .isString()
@@ -11,5 +11,5 @@ export const loginOrEmailValidation = body("loginOrEmail")
 export const loginUserValidators = [
   loginOrEmailValidation,
   passwordInputValidation,
-  checkErrorsMiddleware
+  checkValidationErrorsMiddleware
 ]

@@ -1,4 +1,4 @@
-import { IPaginationResultValues } from "./shared"
+import { IPaginationResultValues, IPaginationValues } from "./shared"
 
 export interface ICommentView {
   id: string
@@ -16,4 +16,8 @@ export interface ICommentInput {
 
 export interface ICommentDto extends IPaginationResultValues {
   items: ICommentView[]
+}
+
+export interface ISearchCommentsValues extends IPaginationValues {
+  postId: string
 }

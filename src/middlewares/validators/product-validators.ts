@@ -1,5 +1,5 @@
 import { body, param } from 'express-validator';
-import { checkErrorsMiddleware } from '../global/check-errors-middleware';
+import { checkValidationErrorsMiddleware } from './check-validation-errors-middleware';
 
 const titleInputValidator = body('title')
   .isString()
@@ -13,16 +13,16 @@ const idParamValidator = param('id')
 
 export const createProductValidators = [
   titleInputValidator,
-  checkErrorsMiddleware
+  checkValidationErrorsMiddleware
 ]
 
 export const updateProductValidators = [
   idParamValidator,
   titleInputValidator,
-  checkErrorsMiddleware
+  checkValidationErrorsMiddleware
 ]
 
 export const checkIdProductValidators = [
   idParamValidator,
-  checkErrorsMiddleware
+  checkValidationErrorsMiddleware
 ]

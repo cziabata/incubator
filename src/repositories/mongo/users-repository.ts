@@ -25,6 +25,12 @@ export const usersRepository = {
     return usersCollection.findOne({ _id: new ObjectId(id) });
   },
 
+  async doesExistById(id: string): Promise<boolean> {
+    if(!this._checkObjectId(id)) return false
+    const user = usersCollection.findOne({ _id: new ObjectId(id) });
+    return !!user;
+  },
+
   _checkObjectId(id: string): boolean {
     return ObjectId.isValid(id)
   },

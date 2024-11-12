@@ -6,6 +6,10 @@ export type FieldNamesType =
   keyof IAdressesInput |
   keyof IProductInput
 
+export interface IIdType { 
+  id: string 
+}
+
 export interface IPaginationValues {
   pageNumber: number
   pageSize: number

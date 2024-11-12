@@ -1,16 +1,21 @@
 import { Request, Response } from "express";
 import { authService } from "../domains/auth-service";
+import { jwtService } from "../application/jwt.service";
 
 export const loginController = async (req: Request, res: Response) => {
   const { loginOrEmail, password } = req.body
 
-  const accessToken = await authService.loginUser(
+  const user = await authService.loginUser(
     loginOrEmail,
     password
   );
-  if (!accessToken) {
-    res.sendStatus(401);
-  } else {
-    res.sendStatus(204);
-  }
+  if (!user) {
+    res.status(401).json({
+      message: "Invalid login or password"
+    });
+    return;
+  } 
+  const accessToken = await jwtService.createToken(user._id.toString());
+  
+  res.status(200).send({ accessToken });
 }

@@ -23,7 +23,7 @@ export const jwtService = {
     try {
       return jwt.verify(token, SETTINGS.AC_SECRET) as { userId: string };
     } catch (error) {
-      console.error("Token verify some error");
+      console.error(error, "Error occured while token verify");
       return null;
     }
   },

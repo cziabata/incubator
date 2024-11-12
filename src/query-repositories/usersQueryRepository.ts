@@ -5,7 +5,7 @@ import { usersCollection } from "../db/mongoDb";
 export const usersQueryRepository = {
 
   async getUsers(query: ISearchUsersValues): Promise<IUsersDto> {
-    
+
     const { pageNumber, pageSize, sortBy, sortDirection, searchLoginTerm, searchEmailTerm } = query;
 
     const filter: any = {};
@@ -41,9 +41,9 @@ export const usersQueryRepository = {
 
   async getUserById(id: string): Promise<IUserView | null> {
     if (!this._checkObjectId(id)) return null;
-    const user = await usersCollection.findOne({_id: new ObjectId(id)});
+    const user = await usersCollection.findOne({ _id: new ObjectId(id) });
     return user ? this._mapToOutput(user) : null;
-},
+  },
 
   _mapToOutput(user: WithId<IUserView>): IUserView {
     return {
@@ -55,5 +55,5 @@ export const usersQueryRepository = {
   },
   _checkObjectId(id: string): boolean {
     return ObjectId.isValid(id);
-}
+  }
 }

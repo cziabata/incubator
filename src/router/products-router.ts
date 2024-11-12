@@ -7,12 +7,12 @@ import {
   updateProductController 
 } from "../controller/products";
 import { checkIdProductValidators, createProductValidators, updateProductValidators } from "../middlewares/validators/product-validators";
-import { authMiddleware } from "../middlewares/global/auth-middleware";
+import { basicAuthGuard } from "../middlewares/guards/base.auth.guard";
 
 export const productsRouter = Router();
 
 productsRouter.get("/", getProductsController);
 productsRouter.get("/:id", ...checkIdProductValidators, getProductByIdController);
 productsRouter.delete("/:id", ...checkIdProductValidators, deleteProductController);
-productsRouter.post("/", authMiddleware, ...createProductValidators, createProductController);
+productsRouter.post("/", basicAuthGuard, ...createProductValidators, createProductController);
 productsRouter.put("/:id", ...updateProductValidators, updateProductController);
