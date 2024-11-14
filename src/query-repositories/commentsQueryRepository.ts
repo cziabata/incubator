@@ -1,30 +1,18 @@
 import { ObjectId, WithId } from "mongodb";
-import { ICommentDto, ICommentView, ISearchCommentsValues } from "../@types/comments";
+import { ICommentView, } from "../@types/comments";
 import { commentsCollection } from "../db/mongoDb";
 
 export const commentsQueryRepository = {
-  async getCommentsByPostId(query: ISearchCommentsValues): Promise<ICommentDto> {
+  async getCommentById(id: string): Promise<ICommentView | null> {
 
-    const { pageNumber, pageSize, sortBy, sortDirection, postId } = query;
+    if (!this._checkObjectId(id)) return null;
 
-    const filter = { _id: new ObjectId(postId) };
+    const comment = await commentsCollection.findOne({ _id: new ObjectId(id) });
 
-    const totalCount = await commentsCollection.countDocuments(filter);
-    const pagesCount = Math.ceil(totalCount / pageSize);
-
-    const comments = await commentsCollection
-      .find(filter)
-      .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
-      .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize)
-      .toArray();
-
-    return {
-      items: comments.map(c => this._mapToOutput(c)),
-      pagesCount,
-      page: pageNumber,
-      pageSize: pageSize,
-      totalCount,
+    if(comment) {
+      return this._mapToOutput(comment);
+    } else {
+      return null;
     }
 
   },
