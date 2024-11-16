@@ -7,7 +7,7 @@ export const commentInputValidation = body("content")
   .isLength({ min: 20, max: 300 })
   .withMessage("Incorrect comment content");
 
-export const updateCommentValidators = [
+export const inputCommentValidators = [
   commentInputValidation,
   checkValidationErrorsMiddleware
 ]

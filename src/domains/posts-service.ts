@@ -1,6 +1,8 @@
 import { postsRepository } from "../repositories/mongo/posts-repository";
 import { IPostInput, IPostsDto, IPostView, ISearchPostsValues } from "../@types/posts";
 import { blogsService } from "./blogs-service";
+import { ICommentView, INewCommentDto } from "../@types/comments";
+import { commentsRepository } from "../repositories/mongo/comments-repository";
 
 export const postsService = {
 
@@ -36,4 +38,9 @@ export const postsService = {
   async deletePost(id: string): Promise<boolean> {
     return await postsRepository.deletePost(id);
   },
+
+  async createPostComment(data: INewCommentDto): Promise<ICommentView> {
+    return await commentsRepository.createComment(data);
+  },
+
 };

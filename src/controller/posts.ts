@@ -2,6 +2,10 @@ import { Response, Request } from 'express';
 import { postsService } from '../domains/posts-service';
 import { IPaginationValues } from '../@types/shared';
 import { getPaginationValues } from '../utils/pagination-helper';
+import { postsQueryRepository } from '../query-repositories/postsQueryRepository';
+import { commentsQueryRepository } from '../query-repositories/commentsQueryRepository';
+import { usersQueryRepository } from '../query-repositories/usersQueryRepository';
+import { INewCommentDto } from '../@types/comments';
 
 export const getPostsController = async (req: Request, res: Response) => {
   
@@ -52,4 +56,63 @@ export const updatePostController = async (req: Request, res: Response) => {
   } else {
     res.send(404)
   };
+}
+
+export const getPostCommentsController = async (req: Request, res: Response) => {
+
+  const paginationValues: IPaginationValues = getPaginationValues(req.query);
+  const postId = req.params.id;
+
+  const post = await postsQueryRepository.getPostById(postId);
+
+  if(!post) {
+    res.send(404);
+    return;
+  }
+
+  const posts = await commentsQueryRepository.getCommentsByPostId({
+    ...paginationValues,
+    postId,
+  })
+
+  res.status(200).send(posts);
+
+}
+
+export const createPostCommentController = async (req: Request, res: Response) => {
+
+  const userId = req.user?.id;
+  if (!userId) { 
+    res.sendStatus(401);
+    return
+  }
+  const user = await usersQueryRepository.getUserById(userId);
+  if (!user) { 
+    res.sendStatus(401);
+    return
+  }
+
+  const postId = req.params.id;
+  const post = await postsQueryRepository.getPostById(postId);
+  if(!post) {
+    res.send(404);
+    return;
+  }
+
+  const newCommentContent = req.body.content;
+
+  const newCommentDto: INewCommentDto = {
+    content: newCommentContent,
+    commentatorInfo: {
+      userId,
+      userLogin: user.login,
+    },
+    createdAt: new Date().toISOString(),
+    postId,
+  }
+
+  const createdComment = await postsService.createPostComment(newCommentDto);
+
+  res.status(201).send(createdComment);
+  
 }
