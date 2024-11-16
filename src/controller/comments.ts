@@ -27,7 +27,6 @@ export const updateCommentController = async (req: Request, res: Response) => {
   const commentId = req.params.id;
 
   const comment = await commentsQueryRepository.getCommentById(commentId);
-
   if(!comment) {
     res.status(404).send("Not Found");
     return;
@@ -37,11 +36,10 @@ export const updateCommentController = async (req: Request, res: Response) => {
     res.status(403).send("You try to edit the comment that is not your own");
     return;
   }
-
   const success = await commentsService.updateComment(commentId, commentContent);
 
   if(success) {
-    res.status(204);
+    res.send(204);
     return;
   } else {
     res.status(400).send("Some error occured while comment updated");
@@ -75,7 +73,7 @@ export const deleteCommentController = async (req: Request, res: Response) => {
   const success = await commentsService.deleteComment(commentId);
 
   if(success) {
-    res.status(204);
+    res.send(204);
     return;
   } else {
     res.status(400).send("Some error occured while comment deleted");

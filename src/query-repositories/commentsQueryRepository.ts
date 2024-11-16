@@ -34,11 +34,11 @@ export const commentsQueryRepository = {
       .toArray();
 
     return {
-      items: comments.map(c => this._mapToOutput(c)),
       pagesCount,
       page: pageNumber,
       pageSize: pageSize,
       totalCount,
+      items: comments.map(c => this._mapToOutput(c)),
     }
 
   },
