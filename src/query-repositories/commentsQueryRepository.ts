@@ -45,7 +45,7 @@ export const commentsQueryRepository = {
 
   _mapToOutput(comment: WithId<ICommentDB>): ICommentView {
     return {
-      id: comment.id as string,
+      id: comment._id.toString(),
       content: comment.content,
       commentatorInfo: comment.commentatorInfo,
       createdAt: comment.createdAt,
