@@ -14,6 +14,9 @@ export const SETTINGS = {
   AC_SECRET: process.env.AC_SECRET as string,
   AC_TIME: process.env.AC_TIME as string,
   RT_SECRET: process.env.RT_SECRET,
+  EMAIL: process.env.EMAIL,
+  EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+  TO_EMAIL: process.env.TO_EMAIL,
 
   PATH: {
 

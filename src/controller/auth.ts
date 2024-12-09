@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { authService } from "../domains/auth-service";
 import { jwtService } from "../application/jwt.service";
 import { usersQueryRepository } from "../query-repositories/usersQueryRepository";
+import { emailService } from "../domains/email-service";
 
 export const loginController = async (req: Request, res: Response) => {
   const { loginOrEmail, password } = req.body
@@ -35,5 +36,11 @@ export const authMeController = async (req: Request, res: Response) => {
     email: me?.email,
     login: me?.login
   });
+  return;
+}
+
+export const confirmRegistrationController = async (req: Request, res: Response) => {
+  const result = await emailService.send();
+  res.status(200).send(result);
   return;
 }
