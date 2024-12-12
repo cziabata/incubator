@@ -19,6 +19,11 @@ export interface IUserDB {
   email: string
   createdAt: string
   password: string
+  registerConfirmation: {
+    confirmationCode: string
+    expirationDate: Date | null,
+    isConfirmed: boolean
+  }
 }
 
 export interface IUsersDto extends IPaginationResultValues {

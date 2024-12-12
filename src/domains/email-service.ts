@@ -1,8 +1,11 @@
 import nodemailer from "nodemailer";
 import { SETTINGS } from "../config";
+import { IUserDB } from "../@types/users";
+import { registrationEmail } from "../utils/mailing-helper";
 
 export const emailService = {
-  async send() {
+  
+  async sendEmailConfirmationMessage(newUser: IUserDB) {
     // Create a transporter object
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -17,9 +20,9 @@ export const emailService = {
     // Configure the mailoptions object
     const mailOptions = {
       from: SETTINGS.EMAIL,
-      to: SETTINGS.TO_EMAIL,
+      to: newUser.email,
       subject: 'Sending Email using Node.js',
-      text: 'That was easy!'
+      html: registrationEmail(newUser.registerConfirmation.confirmationCode)
     };
 
     let result;

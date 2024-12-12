@@ -12,7 +12,12 @@ export const usersService = {
       createdAt: new Date().toISOString(),
       login: data.login,
       email: data.email,
-      password: hashPassword
+      password: hashPassword,
+      registerConfirmation: {
+        confirmationCode: "",
+        expirationDate: null,
+        isConfirmed: true
+      }
     };
 
     const createdUserId = await usersRepository.createUser(newUser);

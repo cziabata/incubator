@@ -3,6 +3,7 @@ import { authService } from "../domains/auth-service";
 import { jwtService } from "../application/jwt.service";
 import { usersQueryRepository } from "../query-repositories/usersQueryRepository";
 import { emailService } from "../domains/email-service";
+import { IUserInput } from "../@types/users";
 
 export const loginController = async (req: Request, res: Response) => {
   const { loginOrEmail, password } = req.body
@@ -39,8 +40,21 @@ export const authMeController = async (req: Request, res: Response) => {
   return;
 }
 
-export const confirmRegistrationController = async (req: Request, res: Response) => {
-  const result = await emailService.send();
-  res.status(200).send(result);
+export const registrationController = async (req: Request, res: Response) => {
+
+  const prepareData: IUserInput = {
+    login: req.body.login,
+    email: req.body.email,
+    password: req.body.password,
+  }
+
+  const success = await authService.registerUser(prepareData);
+
+  if(success) {
+    res.send(204);
+  } else {
+    res.send(400)
+  }
+  
   return;
 }
