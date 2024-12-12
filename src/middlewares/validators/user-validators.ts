@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import { usersRepository } from "../../repositories/mongo/users-repository";
 import { checkValidationErrorsMiddleware } from "./check-validation-errors-middleware";
 
@@ -39,9 +39,20 @@ export const passwordInputValidation = body("password")
   .isLength({ min: 6, max: 20 })
   .withMessage("password is not correct");
 
+export const confirmationCodeInputValidation = body('code')
+  .isString()
+  .trim()
+  .notEmpty()
+  .withMessage("code is required");
+
 export const createUserValidators = [
   emailInputValidation,
   loginInputValidation,
   passwordInputValidation,
+  checkValidationErrorsMiddleware
+]
+
+export const confirmRegistrationValidators = [
+  confirmationCodeInputValidation,
   checkValidationErrorsMiddleware
 ]

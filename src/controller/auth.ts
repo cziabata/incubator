@@ -58,3 +58,14 @@ export const registrationController = async (req: Request, res: Response) => {
   
   return;
 }
+
+export const confirmRegistrationController = async(req: Request, res: Response) => {
+  const code = req.body.code;
+
+  const success = await authService.confirmRegistration(code);
+  if(success) {
+    res.send(204);
+  } else {
+    res.send(400)
+  }
+}

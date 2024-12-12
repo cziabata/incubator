@@ -31,6 +31,15 @@ export const usersRepository = {
     return !!user;
   },
 
+  async findUserByConfirmationCode(code: string): Promise<WithId<IUserDB> | null> {
+    return usersCollection.findOne({ 'registerConfirmation.confirmationCode': code });
+  },
+
+  async updateConfirmation(_id: ObjectId): Promise<boolean> {
+    let result = await usersCollection.updateOne({ _id }, { $set: { 'registerConfirmation.isConfirmed': true }} );
+    return result.modifiedCount === 1
+  },
+
   _checkObjectId(id: string): boolean {
     return ObjectId.isValid(id)
   },

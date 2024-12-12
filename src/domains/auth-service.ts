@@ -5,6 +5,7 @@ import { bcryptService } from "../application/bcrypt.service";
 import { emailService } from "./email-service";
 import { v4 as uuidv4 } from "uuid";
 import { add } from "date-fns";
+import { checkIsDateInFuture } from "../utils/date-helpers";
 
 export const authService = {
   async loginUser(loginOrEmail: string, password: string): Promise<WithId<IUserDB> | null> {
@@ -32,7 +33,7 @@ export const authService = {
       password: hashPassword,
       registerConfirmation: {
         confirmationCode: uuidv4(),
-        expirationDate: add(new Date(), { minutes: 15 }),
+        expirationDate: add(new Date(), {  hours: 1, minutes: 15 }),
         isConfirmed: false
       }
     };
@@ -48,6 +49,18 @@ export const authService = {
       await usersRepository.deleteUser(createdUserId);
       return false
     }
-    
+  },
+
+  async confirmRegistration(code: string): Promise<boolean> {
+
+    const user = await usersRepository.findUserByConfirmationCode(code);
+    if(!user) return false;
+    if(user.registerConfirmation.isConfirmed) return false;
+    if(user.registerConfirmation.confirmationCode !== code) return false;
+    if(user.registerConfirmation.expirationDate && !checkIsDateInFuture(user.registerConfirmation.expirationDate)) return false;
+
+    const result = await usersRepository.updateConfirmation(user._id);
+    return result;
+
   }
 }
