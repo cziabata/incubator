@@ -18,6 +18,13 @@ export const emailInputValidation = body("email")
     }
   );
 
+export const emailResendValidation = body("email")
+  .isString()
+  .trim()
+  .isLength({ min: 1 })
+  .isEmail()
+  .withMessage("email is not correct")
+
 export const loginInputValidation = body("login")
   .isString()
   .trim()
@@ -54,5 +61,10 @@ export const createUserValidators = [
 
 export const confirmRegistrationValidators = [
   confirmationCodeInputValidation,
+  checkValidationErrorsMiddleware
+]
+
+export const emailResendingValidators = [
+  emailResendValidation,
   checkValidationErrorsMiddleware
 ]

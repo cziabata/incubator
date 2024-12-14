@@ -33,18 +33,18 @@ export const authService = {
       password: hashPassword,
       registerConfirmation: {
         confirmationCode: uuidv4(),
-        expirationDate: add(new Date(), {  hours: 1, minutes: 15 }),
+        expirationDate: add(new Date(), { hours: 1, minutes: 15 }),
         isConfirmed: false
       }
     };
 
     const createdUserId = await usersRepository.createUser(newUser);
-    
+
     try {
       const result = await emailService.sendEmailConfirmationMessage(newUser);
-      console.log(result);
+      console.log("result: ", result);
       return true;
-    } catch(error) {
+    } catch (error) {
       console.log(error);
       await usersRepository.deleteUser(createdUserId);
       return false
@@ -54,13 +54,43 @@ export const authService = {
   async confirmRegistration(code: string): Promise<boolean> {
 
     const user = await usersRepository.findUserByConfirmationCode(code);
-    if(!user) return false;
-    if(user.registerConfirmation.isConfirmed) return false;
-    if(user.registerConfirmation.confirmationCode !== code) return false;
-    if(user.registerConfirmation.expirationDate && !checkIsDateInFuture(user.registerConfirmation.expirationDate)) return false;
+    if (!user) return false;
+    if (user.registerConfirmation.isConfirmed) return false;
+    if (user.registerConfirmation.confirmationCode !== code) return false;
+    if (user.registerConfirmation.expirationDate && !checkIsDateInFuture(user.registerConfirmation.expirationDate)) return false;
 
     const result = await usersRepository.updateConfirmation(user._id);
     return result;
 
+  },
+
+  async resendEmail(email: string): Promise<boolean> {
+    try {
+
+      const user = await usersRepository.findByLoginOrEmail(email);
+      if(!user) return false;
+      if (user.registerConfirmation.isConfirmed) return false;
+
+      const resendedEmailUser = {
+        ...user,
+        registerConfirmation: {
+          confirmationCode: uuidv4(),
+          expirationDate: add(new Date(), { hours: 1, minutes: 15 }),
+          isConfirmed: false
+        }
+      }
+
+      const result = await emailService.sendEmailConfirmationMessage(resendedEmailUser);
+      console.log("result: ", result);
+      await usersRepository.updateConfirmationAfterEmailResending({
+        _id: resendedEmailUser._id,
+        confirmationCode: resendedEmailUser.registerConfirmation.confirmationCode,
+        expirationDate: resendedEmailUser.registerConfirmation.expirationDate,
+      })
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
   }
 }

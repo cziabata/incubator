@@ -1,6 +1,7 @@
 import { ObjectId, WithId } from "mongodb";
 import { IUserDB, IUserView } from "../../@types/users";
 import { usersCollection } from "../../db/mongoDb";
+import { IUpdateConfirmationAfterEmailResendingDto } from "../../@types/auth";
 
 export const usersRepository = {
   async createUser(newUser: IUserDB): Promise<string> {
@@ -26,7 +27,7 @@ export const usersRepository = {
   },
 
   async doesExistById(id: string): Promise<boolean> {
-    if(!this._checkObjectId(id)) return false
+    if (!this._checkObjectId(id)) return false
     const user = usersCollection.findOne({ _id: new ObjectId(id) });
     return !!user;
   },
@@ -36,7 +37,18 @@ export const usersRepository = {
   },
 
   async updateConfirmation(_id: ObjectId): Promise<boolean> {
-    let result = await usersCollection.updateOne({ _id }, { $set: { 'registerConfirmation.isConfirmed': true }} );
+    let result = await usersCollection.updateOne({ _id }, { $set: { 'registerConfirmation.isConfirmed': true } });
+    return result.modifiedCount === 1
+  },
+
+  async updateConfirmationAfterEmailResending(params: IUpdateConfirmationAfterEmailResendingDto): Promise<boolean> {
+
+    const { _id, confirmationCode, expirationDate } = params
+
+    let result = await usersCollection.updateOne({ _id }, { $set: { 
+      'registerConfirmation.confirmationCode': confirmationCode,
+      'registerConfirmation.expirationDate': expirationDate,
+    } });
     return result.modifiedCount === 1
   },
 

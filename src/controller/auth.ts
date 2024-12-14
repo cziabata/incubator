@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { authService } from "../domains/auth-service";
 import { jwtService } from "../application/jwt.service";
 import { usersQueryRepository } from "../query-repositories/usersQueryRepository";
-import { emailService } from "../domains/email-service";
 import { IUserInput } from "../@types/users";
 
 export const loginController = async (req: Request, res: Response) => {
@@ -63,6 +62,16 @@ export const confirmRegistrationController = async(req: Request, res: Response) 
   const code = req.body.code;
 
   const success = await authService.confirmRegistration(code);
+  if(success) {
+    res.send(204);
+  } else {
+    res.send(400)
+  }
+}
+
+export const emailResendingController = async(req: Request, res: Response) => {
+  const email = req.body.email;
+  const success = await authService.resendEmail(email);
   if(success) {
     res.send(204);
   } else {
