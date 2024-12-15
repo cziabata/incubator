@@ -1,5 +1,5 @@
 import { ObjectId, WithId } from "mongodb";
-import { IUserDB, IUserView } from "../../@types/users";
+import { IUserDB } from "../../@types/users";
 import { usersCollection } from "../../db/mongoDb";
 import { IUpdateConfirmationAfterEmailResendingDto } from "../../@types/auth";
 

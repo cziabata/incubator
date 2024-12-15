@@ -4,8 +4,7 @@ import { usersRepository } from "../repositories/mongo/users-repository";
 import { bcryptService } from "../application/bcrypt.service";
 import { emailService } from "./email-service";
 import { v4 as uuidv4 } from "uuid";
-import { add } from "date-fns";
-import { checkIsDateInFuture } from "../utils/date-helpers";
+import { add, isAfter } from "date-fns";
 
 export const authService = {
   async loginUser(loginOrEmail: string, password: string): Promise<WithId<IUserDB> | null> {
@@ -57,11 +56,11 @@ export const authService = {
     if (!user) return false;
     if (user.registerConfirmation.isConfirmed) return false;
     if (user.registerConfirmation.confirmationCode !== code) return false;
-    if (user.registerConfirmation.expirationDate && !checkIsDateInFuture(user.registerConfirmation.expirationDate)) return false;
+    if(!user.registerConfirmation.expirationDate) return false
+    if (!isAfter(user.registerConfirmation.expirationDate, new Date(Date.now()))) return false;
 
     const result = await usersRepository.updateConfirmation(user._id);
     return result;
-
   },
 
   async resendEmail(email: string): Promise<boolean> {
