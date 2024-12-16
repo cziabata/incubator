@@ -19,6 +19,22 @@ const codeParamValidator = body('code')
   })
   .withMessage('User with the given code does not exist');
 
+  export const emailInputValidation = body("email")
+  .isString()
+  .trim()
+  .isLength({ min: 1 })
+  .isEmail()
+  .withMessage("User email doesnt exist")
+  .custom(
+    async (email: string) => {
+      const user = await usersRepository.findByLoginOrEmail(email);
+      if (!user) {
+        throw new Error("User with such email doesnt exist");
+      }
+      return true;
+    }
+  );
+
 export const checkConfirmCodeValidators = [
   codeParamValidator,
   checkValidationErrorsMiddleware
