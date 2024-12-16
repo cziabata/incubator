@@ -18,13 +18,6 @@ export const emailInputValidation = body("email")
     }
   );
 
-export const emailResendValidation = body("email")
-  .isString()
-  .trim()
-  .isLength({ min: 1 })
-  .isEmail()
-  .withMessage("email is not correct")
-
 export const loginInputValidation = body("login")
   .isString()
   .trim()
@@ -46,12 +39,6 @@ export const passwordInputValidation = body("password")
   .isLength({ min: 6, max: 20 })
   .withMessage("password is not correct");
 
-export const confirmationCodeInputValidation = body('code')
-  .isString()
-  .trim()
-  .notEmpty()
-  .withMessage("code is required");
-
 export const createUserValidators = [
   emailInputValidation,
   loginInputValidation,
@@ -59,12 +46,7 @@ export const createUserValidators = [
   checkValidationErrorsMiddleware
 ]
 
-export const confirmRegistrationValidators = [
-  confirmationCodeInputValidation,
-  checkValidationErrorsMiddleware
-]
-
 export const emailResendingValidators = [
-  emailResendValidation,
+  emailInputValidation,
   checkValidationErrorsMiddleware
 ]
