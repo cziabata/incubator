@@ -26,10 +26,15 @@ const codeParamValidator = body('code')
   .isEmail()
   .withMessage("User email doesnt exist")
   .custom(
-    async (email: string) => {
+    async (email: string, { req }) => {
       const user = await usersRepository.findByLoginOrEmail(email);
       if (!user) {
+        req.statusCode = 400;
         throw new Error("User with such email doesnt exist");
+      }
+      if (user.registerConfirmation.isConfirmed) {
+        req.statusCode = 400;
+        return Promise.reject('Code already confirmed');
       }
       return true;
     }
@@ -37,5 +42,10 @@ const codeParamValidator = body('code')
 
 export const checkConfirmCodeValidators = [
   codeParamValidator,
+  checkValidationErrorsMiddleware
+]
+
+export const resendEmailValidators = [
+  emailInputValidation,
   checkValidationErrorsMiddleware
 ]

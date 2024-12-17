@@ -8,8 +8,8 @@ import {
   emailResendingController,
 } from "../controller/auth";
 import { accessTokenGuard } from "../middlewares/guards/access.token.guard";
-import { createUserValidators, emailResendingValidators } from "../middlewares/validators/user-validators";
-import { checkConfirmCodeValidators } from "../middlewares/validators/auth-validators";
+import { createUserValidators } from "../middlewares/validators/user-validators";
+import { checkConfirmCodeValidators, resendEmailValidators } from "../middlewares/validators/auth-validators";
 
 export const authRouter = Router();
 
@@ -17,4 +17,4 @@ authRouter.post("/login", ...loginUserValidators, loginController);
 authRouter.get("/me", accessTokenGuard, authMeController);
 authRouter.post("/registration", ...createUserValidators, registrationController);
 authRouter.post("/registration-confirmation", ...checkConfirmCodeValidators, confirmRegistrationController);
-authRouter.post("/registration-email-resending", ...emailResendingValidators, emailResendingController);
+authRouter.post("/registration-email-resending", ...resendEmailValidators, emailResendingController);

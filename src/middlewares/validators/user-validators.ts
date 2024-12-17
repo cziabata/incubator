@@ -45,8 +45,3 @@ export const createUserValidators = [
   passwordInputValidation,
   checkValidationErrorsMiddleware
 ]
-
-export const emailResendingValidators = [
-  emailInputValidation,
-  checkValidationErrorsMiddleware
-]
