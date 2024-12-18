@@ -9,11 +9,13 @@ import { clearAllRouter } from "./router/clear-all-router";
 import { usersRouter } from "./router/users-router";
 import { authRouter } from "./router/auth-router";
 import { commentsRouter } from "./router/comments-router";
+import cookieParser from "cookie-parser";
 
 export const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 
 app.use(SETTINGS.PATH.CLEAR_ALL, clearAllRouter);
 

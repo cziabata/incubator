@@ -23,3 +23,18 @@ export interface IPaginationResultValues {
   pageSize: number
   totalCount: number
 }
+
+export enum ResultStatus {
+  Success = 'Success',
+  NotFound = 'NotFound',
+  Forbidden = 'Forbidden',
+  Unauthorized = 'Unauthorized',
+  BadRequest = 'BadRequest'
+}
+
+export interface Result<T = null> {
+  status: ResultStatus;
+  errorMessage?: string;
+  extensions?: [{ field: 'id', message: '' }]
+  data: T
+}
