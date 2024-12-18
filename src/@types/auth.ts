@@ -20,3 +20,7 @@ export interface IUpdateConfirmationAfterEmailResendingDto {
   confirmationCode: string
   expirationDate: Date
 }
+
+export interface IUsedRefreshToken {
+  token: string
+}

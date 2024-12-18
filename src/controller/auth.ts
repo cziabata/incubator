@@ -18,7 +18,9 @@ export const loginController = async (req: Request, res: Response) => {
     return;
   }
   const accessToken = await jwtService.createToken(user._id.toString());
+  const refreshToken = await jwtService.createRefreshToken(user._id.toString());
 
+  res.cookie('refreshToken ', refreshToken, { httpOnly: true, secure: true });
   res.status(200).send({ accessToken });
 }
 

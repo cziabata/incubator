@@ -13,6 +13,7 @@ export const SETTINGS = {
   DB_NAME: process.env.DB_NAME || "incubator",
   AC_SECRET: process.env.AC_SECRET as string,
   AC_TIME: process.env.AC_TIME as string,
+  REFRESH_TOKEN_TIME: process.env.REFRESH_TOKEN_TIME as string,
   RT_SECRET: process.env.RT_SECRET,
   EMAIL: process.env.EMAIL,
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,

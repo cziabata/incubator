@@ -5,12 +5,14 @@ import { IBlogView } from '../@types/blogs';
 import { IPostView } from '../@types/posts';
 import { IUserDB } from '../@types/users';
 import { ICommentDB } from '../@types/comments';
+import { IUsedRefreshToken } from '../@types/auth';
 dotenv.config();
 
 export let blogsCollection: Collection<IBlogView>;
 export let postsCollection: Collection<IPostView>;
 export let usersCollection: Collection<IUserDB>;
 export let commentsCollection: Collection<ICommentDB>;
+export let refreshTokensBlackListCollection: Collection<IUsedRefreshToken>
 
 export async function runDb(url: string ) {
 
@@ -27,6 +29,7 @@ export async function runDb(url: string ) {
   postsCollection = db.collection<IPostView>("posts");
   usersCollection = db.collection<IUserDB>("users");
   commentsCollection = db.collection<ICommentDB>("comments");
+  refreshTokensBlackListCollection = db.collection<IUsedRefreshToken>("refreshTokensBlackList");
 
   try {
     await client.connect();
