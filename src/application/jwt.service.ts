@@ -28,9 +28,9 @@ export const jwtService = {
       return null;
     }
   },
-  async verifyToken(token: string): Promise<{ userId: string } | null> {
+  async verifyToken(token: string): Promise<{ userId: string, exp: number } | null> {
     try {
-      return jwt.verify(token, SETTINGS.AC_SECRET) as { userId: string };
+      return jwt.verify(token, SETTINGS.AC_SECRET) as { userId: string, exp: number };
     } catch (error) {
       console.error(error, "Error occured while token verify");
       return null;
