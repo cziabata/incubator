@@ -5,6 +5,8 @@ import { bcryptService } from "../application/bcrypt.service";
 import { emailService } from "./email-service";
 import { v4 as uuidv4 } from "uuid";
 import { add, isAfter } from "date-fns";
+import { jwtService } from "../application/jwt.service";
+import { refreshTokenRepository } from "../repositories/mongo/refresh-tokens-repository";
 
 export const authService = {
   async loginUser(loginOrEmail: string, password: string): Promise<WithId<IUserDB> | null> {
@@ -41,7 +43,6 @@ export const authService = {
 
     try {
       const result = await emailService.sendEmailConfirmationMessage(newUser);
-      console.log("result: ", result);
       return true;
     } catch (error) {
       console.log(error);
@@ -56,7 +57,7 @@ export const authService = {
     if (!user) return false;
     if (user.registerConfirmation.isConfirmed) return false;
     if (user.registerConfirmation.confirmationCode !== code) return false;
-    if(!user.registerConfirmation.expirationDate) return false
+    if (!user.registerConfirmation.expirationDate) return false
     if (!isAfter(user.registerConfirmation.expirationDate, new Date(Date.now()))) return false;
 
     const result = await usersRepository.updateConfirmation(user._id);
@@ -67,7 +68,7 @@ export const authService = {
     try {
 
       const user = await usersRepository.findByLoginOrEmail(email);
-      if(!user) return false;
+      if (!user) return false;
       if (user.registerConfirmation.isConfirmed) return false;
 
       const resendedEmailUser = {
@@ -79,8 +80,8 @@ export const authService = {
         }
       }
 
-      const result = await emailService.sendEmailConfirmationMessage(resendedEmailUser);
-      console.log("result: ", result);
+      await emailService.sendEmailConfirmationMessage(resendedEmailUser);
+
       await usersRepository.updateConfirmationAfterEmailResending({
         _id: resendedEmailUser._id,
         confirmationCode: resendedEmailUser.registerConfirmation.confirmationCode,
@@ -90,6 +91,22 @@ export const authService = {
     } catch (error) {
       console.log(error);
       return false;
+    }
+  },
+
+  async refreshTokens(userId: string, oldRefreshToken: string): Promise<{ refreshToken: string, accessToken: string } | null> {
+
+    try {
+      const result = await refreshTokenRepository.insertToken(oldRefreshToken);
+
+      if (!result) return null;
+
+      const refreshToken = await jwtService.createRefreshToken(userId);
+      const accessToken = await jwtService.createToken(userId);
+      return { refreshToken, accessToken };
+    } catch (error) {
+      console.log(error);
+      return null;
     }
   }
 }

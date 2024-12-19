@@ -3,6 +3,7 @@ import { authService } from "../domains/auth-service";
 import { jwtService } from "../application/jwt.service";
 import { usersQueryRepository } from "../query-repositories/usersQueryRepository";
 import { IUserInput } from "../@types/users";
+import { IIdType, ResultStatus } from "../@types/shared";
 
 export const loginController = async (req: Request, res: Response) => {
   const { loginOrEmail, password } = req.body
@@ -20,7 +21,7 @@ export const loginController = async (req: Request, res: Response) => {
   const accessToken = await jwtService.createToken(user._id.toString());
   const refreshToken = await jwtService.createRefreshToken(user._id.toString());
 
-  res.cookie('refreshToken ', refreshToken, { httpOnly: true, secure: true });
+  res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
   res.status(200).send({ accessToken });
 }
 
@@ -79,4 +80,22 @@ export const emailResendingController = async(req: Request, res: Response) => {
   } else {
     res.send(400)
   }
+}
+
+export const refreshTokenController = async(req: Request, res: Response) => {
+
+  const { id } = req.user as IIdType ;
+  const oldRefreshToken = req.cookies.refreshToken;
+
+  const result = await authService.refreshTokens(id, oldRefreshToken);
+
+  if(!result) {
+    res.status(400).send("Error while refreshing tokens");
+    return;
+  }
+
+  const { accessToken, refreshToken } = result;
+
+  res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
+  res.status(200).send({ accessToken });
 }
