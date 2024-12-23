@@ -3,7 +3,7 @@ import { authService } from "../domains/auth-service";
 import { jwtService } from "../application/jwt.service";
 import { usersQueryRepository } from "../query-repositories/usersQueryRepository";
 import { IUserInput } from "../@types/users";
-import { IIdType, ResultStatus } from "../@types/shared";
+import { IIdType } from "../@types/shared";
 
 export const loginController = async (req: Request, res: Response) => {
   const { loginOrEmail, password } = req.body
@@ -30,7 +30,7 @@ export const authMeController = async (req: Request, res: Response) => {
   const userId = req.user?.id as string;
   if (!userId) { 
     res.sendStatus(401);
-    return
+    return;
   }
 
   const me = await usersQueryRepository.getUserById(userId);
