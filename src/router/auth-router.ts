@@ -7,6 +7,7 @@ import {
   confirmRegistrationController, 
   emailResendingController,
   refreshTokenController,
+  logoutController,
 } from "../controller/auth";
 import { accessTokenGuard } from "../middlewares/guards/access.token.guard";
 import { createUserValidators } from "../middlewares/validators/user-validators";
@@ -21,3 +22,4 @@ authRouter.post("/registration", ...createUserValidators, registrationController
 authRouter.post("/registration-confirmation", ...checkConfirmCodeValidators, confirmRegistrationController);
 authRouter.post("/registration-email-resending", ...resendEmailValidators, emailResendingController);
 authRouter.post("/refresh-token", refreshTokenGuard, refreshTokenController);
+authRouter.post("/logout", refreshTokenGuard, logoutController);

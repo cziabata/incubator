@@ -99,3 +99,19 @@ export const refreshTokenController = async(req: Request, res: Response) => {
   res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
   res.status(200).send({ accessToken });
 }
+
+export const logoutController = async(req: Request, res: Response) => { 
+  
+  const oldRefreshToken = req.cookies.refreshToken;
+
+  const result = await authService.logout(oldRefreshToken);
+
+  if(!result) {
+    res.status(400).send("Error while logging out");
+    return;
+  }
+
+  res.clearCookie('refreshToken');
+  res.clearCookie('accessToken');
+  res.sendStatus(204);
+}

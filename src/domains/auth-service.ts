@@ -108,5 +108,15 @@ export const authService = {
       console.log(error);
       return null;
     }
+  },
+
+  async logout(refreshToken: string): Promise<boolean> {
+    try {
+      const result = await refreshTokenRepository.insertToken(refreshToken);
+      return result;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
   }
 }
