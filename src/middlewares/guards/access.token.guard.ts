@@ -21,7 +21,12 @@ export const accessTokenGuard = async (req: Request, res: Response, next: NextFu
 
   if(payload) {
 
-    const { userId } = payload;
+    const { userId, exp } = payload;
+
+    if (exp && Date.now() >= exp * 1000) { 
+      res.status(401).send("Token expired");
+      return;
+    }
 
     const user = await usersRepository.doesExistById(userId);
 
