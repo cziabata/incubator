@@ -24,3 +24,19 @@ export interface IUpdateConfirmationAfterEmailResendingDto {
 export interface IUsedRefreshToken {
   token: string
 }
+
+export interface ISession {
+  user_id: string
+  device_id: string
+  iat: Date
+  device_name: string
+  ip: string
+  exp: Date
+}
+
+export interface IActiveDevice {
+  ip: string
+  title: string
+  lastActiveDate: string
+  deviceId: string
+}

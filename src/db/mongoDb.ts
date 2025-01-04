@@ -5,7 +5,7 @@ import { IBlogView } from '../@types/blogs';
 import { IPostView } from '../@types/posts';
 import { IUserDB } from '../@types/users';
 import { ICommentDB } from '../@types/comments';
-import { IUsedRefreshToken } from '../@types/auth';
+import { ISession, IUsedRefreshToken } from '../@types/auth';
 import { IApiAttempt } from '../@types/shared';
 dotenv.config();
 
@@ -15,6 +15,7 @@ export let usersCollection: Collection<IUserDB>;
 export let commentsCollection: Collection<ICommentDB>;
 export let refreshTokensBlackListCollection: Collection<IUsedRefreshToken>;
 export let apiAttemptsCollection: Collection<IApiAttempt>;
+export let sessionsCollection: Collection<ISession>;
 
 export async function runDb(url: string ) {
 
@@ -33,6 +34,7 @@ export async function runDb(url: string ) {
   commentsCollection = db.collection<ICommentDB>("comments");
   refreshTokensBlackListCollection = db.collection<IUsedRefreshToken>("refreshTokensBlackList");
   apiAttemptsCollection = db.collection<IApiAttempt>("loginAttempts");
+  sessionsCollection = db.collection<ISession>("sessions");
 
   try {
     await client.connect();

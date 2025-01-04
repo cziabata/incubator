@@ -23,6 +23,8 @@ export const SETTINGS = {
 
     AUTH: `${PATH.HOMETASK_API}/auth`,
 
+    SECURITY_DEVICES: `${PATH.HOMETASK_API}/security`,
+
     CLEAR_ALL: `${PATH.HOMETASK_API}/testing/all-data`,
 
     POSTS: `${PATH.HOMETASK_API}/posts`,

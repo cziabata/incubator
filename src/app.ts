@@ -9,7 +9,10 @@ import { clearAllRouter } from "./router/clear-all-router";
 import { usersRouter } from "./router/users-router";
 import { authRouter } from "./router/auth-router";
 import { commentsRouter } from "./router/comments-router";
-import cookieParser from "cookie-parser";
+import { securityDevicesRouter } from "./router/security-devices-router";
+
+import cookieParser from 'cookie-parser';
+
 
 export const app = express();
 
@@ -28,6 +31,7 @@ app.use(SETTINGS.PATH.USERS, usersRouter);
 app.use(SETTINGS.PATH.COMMENTS, commentsRouter);
 
 app.use(SETTINGS.PATH.AUTH, authRouter);
+app.use(SETTINGS.PATH.SECURITY_DEVICES, securityDevicesRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello incubator!!!444")
