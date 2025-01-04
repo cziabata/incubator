@@ -7,6 +7,8 @@ const startApp = async () => {
   const res = await runDb(SETTINGS.MONGO_URL);
   if(!res) process.exit(1);
 
+  app.set('trust proxy', true);
+
   app.listen(SETTINGS.PORT, () => {
     console.log(`App started on ${SETTINGS.PORT} port`)
   })

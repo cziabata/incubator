@@ -6,13 +6,15 @@ import { IPostView } from '../@types/posts';
 import { IUserDB } from '../@types/users';
 import { ICommentDB } from '../@types/comments';
 import { IUsedRefreshToken } from '../@types/auth';
+import { IApiAttempt } from '../@types/shared';
 dotenv.config();
 
 export let blogsCollection: Collection<IBlogView>;
 export let postsCollection: Collection<IPostView>;
 export let usersCollection: Collection<IUserDB>;
 export let commentsCollection: Collection<ICommentDB>;
-export let refreshTokensBlackListCollection: Collection<IUsedRefreshToken>
+export let refreshTokensBlackListCollection: Collection<IUsedRefreshToken>;
+export let apiAttemptsCollection: Collection<IApiAttempt>;
 
 export async function runDb(url: string ) {
 
@@ -30,6 +32,7 @@ export async function runDb(url: string ) {
   usersCollection = db.collection<IUserDB>("users");
   commentsCollection = db.collection<ICommentDB>("comments");
   refreshTokensBlackListCollection = db.collection<IUsedRefreshToken>("refreshTokensBlackList");
+  apiAttemptsCollection = db.collection<IApiAttempt>("loginAttempts");
 
   try {
     await client.connect();

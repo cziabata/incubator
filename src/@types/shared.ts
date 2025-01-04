@@ -38,3 +38,9 @@ export interface Result<T = null> {
   extensions?: [{ field: 'id', message: '' }]
   data: T
 }
+
+export interface IApiAttempt {
+  IP: string
+  URL: string 
+  date: Date
+}

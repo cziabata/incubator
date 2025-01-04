@@ -13,10 +13,11 @@ import { accessTokenGuard } from "../middlewares/guards/access.token.guard";
 import { createUserValidators } from "../middlewares/validators/user-validators";
 import { checkConfirmCodeValidators, resendEmailValidators } from "../middlewares/validators/auth-validators";
 import { refreshTokenGuard } from "../middlewares/guards/refresh.token.guard";
+import { apiAttemptsGuard } from "../middlewares/guards/api.attempts.guard";
 
 export const authRouter = Router();
 
-authRouter.post("/login", ...loginUserValidators, loginController);
+authRouter.post("/login", apiAttemptsGuard, ...loginUserValidators, loginController);
 authRouter.get("/me", accessTokenGuard, authMeController);
 authRouter.post("/registration", ...createUserValidators, registrationController);
 authRouter.post("/registration-confirmation", ...checkConfirmCodeValidators, confirmRegistrationController);

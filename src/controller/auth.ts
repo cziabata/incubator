@@ -4,6 +4,7 @@ import { jwtService } from "../application/jwt.service";
 import { usersQueryRepository } from "../query-repositories/usersQueryRepository";
 import { IUserInput } from "../@types/users";
 import { IIdType } from "../@types/shared";
+import { apiAttemptsService } from "../domains/api-attempts-service";
 
 export const loginController = async (req: Request, res: Response) => {
   const { loginOrEmail, password } = req.body
@@ -12,6 +13,9 @@ export const loginController = async (req: Request, res: Response) => {
     loginOrEmail,
     password
   );
+
+  await apiAttemptsService.registerAttempt(req);
+  
   if (!user) {
     res.status(401).json({
       message: "Invalid login or password"
