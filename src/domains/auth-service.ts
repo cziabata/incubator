@@ -35,7 +35,7 @@ export const authService = {
     const refreshToken = await jwtService.createRefreshToken(user._id.toString(), iat.getTime(), deviceId);
 
     const newSession = {
-      user_id: req.user?.id as string,
+      user_id: user._id.toString(),
       device_id: deviceId,
       device_name: req.headers["user-agent"] || "",
       ip: req.ip || "",
