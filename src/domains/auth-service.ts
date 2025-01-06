@@ -39,7 +39,7 @@ export const authService = {
       device_id: deviceId,
       device_name: req.headers["user-agent"] || "",
       ip: req.ip || "",
-      iat: iat.getTime(),
+      iat: iat.toISOString(),
       exp,
     };
 
@@ -150,7 +150,7 @@ export const authService = {
       const accessToken = await jwtService.createToken(id);
 
       const newSession: Partial<ISession> = {
-        iat: iat.getTime(),
+        iat: iat.toISOString(),
         exp,
       };
   
