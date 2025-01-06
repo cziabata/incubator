@@ -1,16 +1,52 @@
 import { WithId } from "mongodb";
+import { Request } from "express";
 import { IUserDB, IUserInput } from "../@types/users";
 import { usersRepository } from "../repositories/mongo/users-repository";
 import { bcryptService } from "../application/bcrypt.service";
 import { emailService } from "./email-service";
 import { v4 as uuidv4 } from "uuid";
-import { add, isAfter } from "date-fns";
+import { add, addSeconds, isAfter } from "date-fns";
 import { jwtService } from "../application/jwt.service";
 import { refreshTokenRepository } from "../repositories/mongo/refresh-tokens-repository";
+import { SETTINGS } from "../config";
+import { sessionSevice } from "../application/session.service";
+import { securityDevicesService } from "./security-devices-service";
+import { IIdType, ISessionType } from "../@types/shared";
+import { ISession } from "../@types/auth";
 
 export const authService = {
-  async loginUser(loginOrEmail: string, password: string): Promise<WithId<IUserDB> | null> {
-    return this.checkUserCredentials(loginOrEmail, password);
+
+  async loginUser(req: Request): Promise<{ accessToken: string, refreshToken: string } | null> {
+
+    const { loginOrEmail, password } = req.body;
+
+    const user = await this.checkUserCredentials(loginOrEmail, password);
+    if (!user) {
+      return null;
+    }
+
+    const deviceId = await sessionSevice.generateDeviceId();
+
+    const iat = new Date(Date.now());
+    const refreshTokenSeconds = parseInt(SETTINGS.REFRESH_TOKEN_TIME.replace("s", ""), 10);
+    const exp = addSeconds(iat, refreshTokenSeconds);
+
+    const accessToken = await jwtService.createToken(user._id.toString());
+    const refreshToken = await jwtService.createRefreshToken(user._id.toString(), iat.getTime(), deviceId);
+
+    const newSession = {
+      user_id: req.user?.id as string,
+      device_id: deviceId,
+      device_name: req.headers["user-agent"] || "",
+      ip: req.ip || "",
+      iat: iat.getTime(),
+      exp,
+    };
+
+    await securityDevicesService.createSession(newSession);
+
+    return { accessToken, refreshToken };
+
   },
 
   async checkUserCredentials(loginOrEmail: string, password: string): Promise<WithId<IUserDB> | null> {
@@ -94,15 +130,32 @@ export const authService = {
     }
   },
 
-  async refreshTokens(userId: string, oldRefreshToken: string): Promise<{ refreshToken: string, accessToken: string } | null> {
+  async refreshTokens(req: Request): Promise<{ refreshToken: string, accessToken: string } | null> {
+
+    const { id } = req.user as IIdType;
+    const { deviceId, iat } = req.session as ISessionType;
+
+    const oldRefreshToken = req.cookies.refreshToken;
 
     try {
       const result = await refreshTokenRepository.insertToken(oldRefreshToken);
 
       if (!result) return null;
 
-      const refreshToken = await jwtService.createRefreshToken(userId);
-      const accessToken = await jwtService.createToken(userId);
+      const iat = new Date(Date.now());
+      const refreshTokenSeconds = parseInt(SETTINGS.REFRESH_TOKEN_TIME.replace("s", ""), 10);
+      const exp = addSeconds(iat, refreshTokenSeconds);
+
+      const refreshToken = await jwtService.createRefreshToken(id, iat.getTime(), deviceId);
+      const accessToken = await jwtService.createToken(id);
+
+      const newSession: Partial<ISession> = {
+        iat: iat.getTime(),
+        exp,
+      };
+  
+      await securityDevicesService.updateSession(deviceId, newSession);
+
       return { refreshToken, accessToken };
     } catch (error) {
       console.log(error);

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { jwtService } from "../../application/jwt.service";
 import { usersRepository } from "../../repositories/mongo/users-repository";
-import { IIdType } from "../../@types/shared";
+import { IIdType, ISessionType } from "../../@types/shared";
 import { refreshTokenRepository } from "../../repositories/mongo/refresh-tokens-repository";
 
 export const refreshTokenGuard = async (req: Request, res: Response, next: NextFunction) => {
@@ -26,7 +26,7 @@ export const refreshTokenGuard = async (req: Request, res: Response, next: NextF
     return;
   }
 
-  const { userId, exp } = payload;
+  const { userId, exp, iat, deviceId } = payload;
 
   if (exp && Date.now() >= exp * 1000) { 
     res.status(401).send("Token expired");
@@ -41,5 +41,6 @@ export const refreshTokenGuard = async (req: Request, res: Response, next: NextF
   }
 
   req.user = { id: userId } as IIdType;
+  req.session = { iat, deviceId } as ISessionType;
   next();
 };

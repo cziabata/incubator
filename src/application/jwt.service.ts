@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 import { SETTINGS } from "../config";
+import { sessionSevice } from "./session.service";
+import { IRefreshTokenPayload } from "../@types/auth";
 
 export const jwtService = {
   async createToken(userId: string): Promise<string> {
@@ -11,9 +13,9 @@ export const jwtService = {
       }
     );
   },
-  async createRefreshToken(userId: string): Promise<string> {
+  async createRefreshToken(userId: string, iat: number, deviceId: string): Promise<string> {
     return jwt.sign(
-      { userId },
+      { userId, deviceId, iat },
       SETTINGS.AC_SECRET,
       {
         expiresIn: SETTINGS.REFRESH_TOKEN_TIME,
@@ -28,9 +30,9 @@ export const jwtService = {
       return null;
     }
   },
-  async verifyToken(token: string): Promise<{ userId: string, exp: number } | null> {
+  async verifyToken(token: string): Promise<IRefreshTokenPayload | null> {
     try {
-      return jwt.verify(token, SETTINGS.AC_SECRET) as { userId: string, exp: number };
+      return jwt.verify(token, SETTINGS.AC_SECRET) as IRefreshTokenPayload;
     } catch (error) {
       console.error(error, "Error occured while token verify");
       return null;

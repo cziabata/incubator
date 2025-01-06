@@ -10,6 +10,11 @@ export interface IIdType {
   id: string 
 }
 
+export interface ISessionType {
+  iat: number
+  deviceId: string
+}
+
 export interface IPaginationValues {
   pageNumber: number
   pageSize: number

@@ -9,6 +9,14 @@ export const sessionsQueryRepository = {
     return sessions.map(s => this._mapToOutput(s));
   },
 
+  async getActiveDeviceById(deviceId: string): Promise<IActiveDevice | null> {
+    const session = await sessionsCollection.findOne({ device_id: deviceId });
+    if (!session) {
+      return null;
+    }
+    return this._mapToOutput(session);
+  },
+
   _mapToOutput(session: WithId<ISession>): IActiveDevice {
       return {
         ip: session.ip,

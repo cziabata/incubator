@@ -28,7 +28,7 @@ export interface IUsedRefreshToken {
 export interface ISession {
   user_id: string
   device_id: string
-  iat: Date
+  iat: number
   device_name: string
   ip: string
   exp: Date
@@ -38,5 +38,12 @@ export interface IActiveDevice {
   ip: string
   title: string
   lastActiveDate: string
+  deviceId: string
+}
+
+export interface IRefreshTokenPayload {
+  userId: string
+  exp: number,
+  iat: number,
   deviceId: string
 }

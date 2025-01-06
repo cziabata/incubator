@@ -1,29 +1,23 @@
 import { Request, Response } from "express";
 import { authService } from "../domains/auth-service";
-import { jwtService } from "../application/jwt.service";
 import { usersQueryRepository } from "../query-repositories/usersQueryRepository";
 import { IUserInput } from "../@types/users";
-import { IIdType } from "../@types/shared";
 import { apiAttemptsService } from "../domains/api-attempts-service";
 
 export const loginController = async (req: Request, res: Response) => {
-  const { loginOrEmail, password } = req.body
-
-  const user = await authService.loginUser(
-    loginOrEmail,
-    password
-  );
+  
+  const data = await authService.loginUser(req);
 
   await apiAttemptsService.registerAttempt(req);
   
-  if (!user) {
+  if (!data) {
     res.status(401).json({
       message: "Invalid login or password"
     });
     return;
   }
-  const accessToken = await jwtService.createToken(user._id.toString());
-  const refreshToken = await jwtService.createRefreshToken(user._id.toString());
+  
+  const { accessToken, refreshToken } = data;
 
   res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
   res.status(200).send({ accessToken });
@@ -88,10 +82,7 @@ export const emailResendingController = async(req: Request, res: Response) => {
 
 export const refreshTokenController = async(req: Request, res: Response) => {
 
-  const { id } = req.user as IIdType ;
-  const oldRefreshToken = req.cookies.refreshToken;
-
-  const result = await authService.refreshTokens(id, oldRefreshToken);
+  const result = await authService.refreshTokens(req);
 
   if(!result) {
     res.status(400).send("Error while refreshing tokens");
