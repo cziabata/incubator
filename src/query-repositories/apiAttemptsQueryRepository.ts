@@ -7,7 +7,7 @@ export const apiAttemptsQueryRepository = {
   async countRequests(values: IApiAttempt): Promise<IApiAttempt[]> {
 
     const { IP, URL, date } = values;
-    const thresholdDate = new Date(date.getTime() - 10 * 1000);
+    const thresholdDate = new Date(date.getTime() - (10 * 1000));
 
     const attempts = await apiAttemptsCollection.find({ 
       IP, 
