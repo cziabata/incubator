@@ -2,13 +2,10 @@ import { Request, Response } from "express";
 import { authService } from "../domains/auth-service";
 import { usersQueryRepository } from "../query-repositories/usersQueryRepository";
 import { IUserInput } from "../@types/users";
-import { apiAttemptsService } from "../domains/api-attempts-service";
 
 export const loginController = async (req: Request, res: Response) => {
   
   const data = await authService.loginUser(req);
-
-  await apiAttemptsService.registerAttempt(req);
   
   if (!data) {
     res.status(401).json({

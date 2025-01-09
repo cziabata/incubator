@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { apiAttemptsQueryRepository } from "../../query-repositories/apiAttemptsQueryRepository";
+import { apiAttemptsService } from "../../domains/api-attempts-service";
 
 export const apiAttemptsGuard = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -15,6 +16,8 @@ export const apiAttemptsGuard = async (req: Request, res: Response, next: NextFu
       res.status(429).send("Too many attempts");
       return;
     }
+
+    await apiAttemptsService.registerAttempt(req);
 
     next();
   } catch (error) {
