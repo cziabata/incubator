@@ -13,6 +13,7 @@ import { sessionSevice } from "../application/session.service";
 import { securityDevicesService } from "./security-devices-service";
 import { IIdType, ISessionType } from "../@types/shared";
 import { ISession } from "../@types/auth";
+import { securityDevicesRepository } from "../repositories/mongo/security-devices-repository";
 
 export const authService = {
 
@@ -163,9 +164,13 @@ export const authService = {
     }
   },
 
-  async logout(refreshToken: string): Promise<boolean> {
+  async logout(req: Request): Promise<boolean> {
+
+    const userId = (req.user as IIdType).id;
+    const deviceId = (req.session as ISessionType).deviceId;
+
     try {
-      const result = await refreshTokenRepository.insertToken(refreshToken);
+      const result = await securityDevicesRepository.deleteActiveSessionByDeviceId(userId, deviceId)
       return result;
     } catch (error) {
       console.log(error);

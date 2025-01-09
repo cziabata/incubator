@@ -96,10 +96,8 @@ export const refreshTokenController = async(req: Request, res: Response) => {
 }
 
 export const logoutController = async(req: Request, res: Response) => { 
-  
-  const oldRefreshToken = req.cookies.refreshToken;
 
-  const result = await authService.logout(oldRefreshToken);
+  const result = await authService.logout(req);
 
   if(!result) {
     res.status(400).send("Error while logging out");
