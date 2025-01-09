@@ -6,7 +6,8 @@ export const sessionsQueryRepository = {
   async getAllActiveDevices(userId: string): Promise<IActiveDevice[]> {
 
     const sessions = await sessionsCollection.find({ user_id: userId }).toArray();
-    return sessions.map(s => this._mapToOutput(s));
+    const activeSessions = sessions.filter(session => session.exp.getTime() > Date.now());
+    return activeSessions.map(s => this._mapToOutput(s));
   },
 
   async getActiveDeviceById(deviceId: string): Promise<IActiveDevice | null> {
@@ -17,11 +18,19 @@ export const sessionsQueryRepository = {
     return this._mapToOutput(session);
   },
 
+  async getActiveDeviceByIatAndUserId(iat: string, userId: string): Promise<WithId<ISession> | null> {
+    const session = await sessionsCollection.findOne({ iat, user_id: userId });
+    if (!session) {
+      return null;
+    }
+    return session;
+  },
+
   _mapToOutput(session: WithId<ISession>): IActiveDevice {
       return {
         ip: session.ip,
         title: session.device_name,
-        lastActiveDate: session.iat.toString(),
+        lastActiveDate: session.iat,
         deviceId: session.device_id,
       };
     },

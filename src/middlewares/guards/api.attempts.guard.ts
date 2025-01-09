@@ -9,10 +9,9 @@ export const apiAttemptsGuard = async (req: Request, res: Response, next: NextFu
     // Получаем IP адрес из заголовков запроса или из сокета.
     const IP = req.ip || req.headers['x-forwarded-for']?.toString() || req.socket.remoteAddress || "";
 
-    const date = new Date();
-    const attempts = await apiAttemptsQueryRepository.countRequests({ IP, URL, date });
+    const attempts = await apiAttemptsQueryRepository.countRequests({ IP, URL, date: new Date() });
 
-    if (attempts.length >= 5) {
+    if (attempts.length > 5) {
       res.status(429).send("Too many attempts");
       return;
     }

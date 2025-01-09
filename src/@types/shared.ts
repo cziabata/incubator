@@ -11,7 +11,7 @@ export interface IIdType {
 }
 
 export interface ISessionType {
-  iat: number
+  iat: string
   deviceId: string
 }
 
