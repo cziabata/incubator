@@ -9,7 +9,7 @@ export const SETTINGS = {
 
   PORT: process.env.PORT || 3000,
   ADMIN_AUTH: 'admin:qwerty',
-  MONGO_URL: process.env.MONGO_URL || "mongodb://0.0.0.0:27017",
+  MONGO_URL: process.env.MONGO_URL || `mongodb://0.0.0.0:27017/${process.env.DB_NAME || "incubator"}`,
   DB_NAME: process.env.DB_NAME || "incubator",
   AC_SECRET: process.env.AC_SECRET as string,
   AC_TIME: process.env.AC_TIME as string,

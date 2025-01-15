@@ -7,6 +7,7 @@ import { IUserDB } from '../@types/users';
 import { ICommentDB } from '../@types/comments';
 import { ISession, IUsedRefreshToken } from '../@types/auth';
 import { IApiAttempt } from '../@types/shared';
+import mongoose from 'mongoose';
 dotenv.config();
 
 export let blogsCollection: Collection<IBlogView>;
@@ -37,7 +38,10 @@ export async function runDb(url: string ) {
   sessionsCollection = db.collection<ISession>("sessions");
 
   try {
+    
     await client.connect();
+    await mongoose.connect(url);
+
     await db.command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
     return true;

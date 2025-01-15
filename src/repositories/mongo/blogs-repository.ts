@@ -1,7 +1,6 @@
-
-import { blogsCollection } from "../../db/mongoDb";
 import { IBlogDto, IBlogInput, IBlogView } from "../../@types/blogs";
 import { ISearchBlogsValues } from "../../@types/blogs";
+import { BlogModel } from "../../db/entity/blogs.entity";
 
 export const blogsRepository = {
   async getBlogs(query: ISearchBlogsValues): Promise<IBlogDto> {
@@ -14,15 +13,15 @@ export const blogsRepository = {
       filter.name = { $regex: searchNameTerm, $options: "i" }
     }
 
-    const totalCount = await blogsCollection.countDocuments(filter);
+    const totalCount = await BlogModel.countDocuments(filter);
     const pagesCount = Math.ceil(totalCount / pageSize);
 
-    const blogs = await blogsCollection
+    const blogs = await BlogModel
       .find(filter)
       .sort({ [sortBy]: sortDirection === "asc" ? "asc" : "desc" })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
-      .toArray();
+      .lean();
 
     return {
       items: blogs.map(b => this.mapToOutput(b)),
@@ -34,18 +33,18 @@ export const blogsRepository = {
   },
 
   async createBlog(newBlog: IBlogView): Promise<IBlogView> {
-    await blogsCollection.insertOne(newBlog);
+    await BlogModel.create(newBlog);
     return this.mapToOutput(newBlog);
   },
 
   async getBlogById(id: string): Promise<IBlogView | null> {
-    const blog = await blogsCollection.findOne({ id });
+    const blog = await BlogModel.findOne({ id });
     return blog ? this.mapToOutput(blog) : null;
   },
 
   async updateBlog(id: string, data: IBlogInput): Promise<boolean> {
 
-    const result = await blogsCollection.updateOne({ id }, {
+    const result = await BlogModel.updateOne({ id }, {
       $set: {
         name: data.name,
         description: data.description,
@@ -57,7 +56,7 @@ export const blogsRepository = {
   },
 
   async deleteBlog(id: string): Promise<boolean> {
-    const result = await blogsCollection.deleteOne({ id });
+    const result = await BlogModel.deleteOne({ id });
     return result.deletedCount === 1;
   },
 
