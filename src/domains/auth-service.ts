@@ -216,8 +216,6 @@ export const authService = {
 
     const hashPassword = await bcryptService.generateHash(newPassword);
 
-    if(hashPassword === user.password) return false;
-
     const result = await usersRepository.updateUserAfterPasswordRecovery(user._id, hashPassword);
     return result;
   }

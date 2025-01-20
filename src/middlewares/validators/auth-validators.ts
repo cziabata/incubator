@@ -50,8 +50,8 @@ const recoveryCodeParamValidator = body('recoveryCode')
   .isString()
   .trim()
   .notEmpty()
-  .custom(async (code, { req }) => {
-    const user = await usersRepository.findUserByConfirmationCode(code);
+  .custom(async (recoveryCode, { req }) => {
+    const user = await usersRepository.findUserByConfirmationCode(recoveryCode);
     if (!user) {
       req.statusCode = 400;
       return Promise.reject('User with the given code does not exist');
