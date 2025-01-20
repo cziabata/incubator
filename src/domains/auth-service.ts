@@ -176,5 +176,33 @@ export const authService = {
       console.log(error);
       return false;
     }
+  },
+
+  async passwordRecovery(email: string): Promise<boolean> {
+    const user = await usersRepository.findByLoginOrEmail(email);
+    if (!user) return true;
+
+    const updatedlUser = {
+      ...user,
+      registerConfirmation: {
+        confirmationCode: uuidv4(),
+        expirationDate: add(new Date(), { hours: 1, minutes: 15 }),
+        isConfirmed: false
+      }
+    }
+
+    try {
+      await emailService.sendPasswordRecoveryEmail(updatedlUser);
+      await usersRepository.updateConfirmationAfterPasswordReset({
+        _id: updatedlUser._id,
+        confirmationCode: updatedlUser.registerConfirmation.confirmationCode,
+        expirationDate: updatedlUser.registerConfirmation.expirationDate,
+        isConfirmed: updatedlUser.registerConfirmation.isConfirmed
+      });
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
   }
 }

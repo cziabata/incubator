@@ -14,12 +14,3 @@ export const checkValidationErrorsMiddleware = (req: Request, res: Response, nex
   }
   next();
 };
-
-// {
-//   errorsMessages: [
-//     {
-//       field: "email",
-//       message: "User with such email doesnt exist"
-//     }
-//   ]
-// }

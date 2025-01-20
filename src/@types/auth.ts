@@ -21,6 +21,13 @@ export interface IUpdateConfirmationAfterEmailResendingDto {
   expirationDate: Date
 }
 
+export interface IUpdateConfirmationAfterPasswordReset {
+  _id: ObjectId
+  confirmationCode: string
+  expirationDate: Date
+  isConfirmed: boolean
+}
+
 export interface IUsedRefreshToken {
   token: string
 }

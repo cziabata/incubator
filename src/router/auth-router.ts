@@ -8,10 +8,11 @@ import {
   emailResendingController,
   refreshTokenController,
   logoutController,
+  passwordRecoveryController,
 } from "../controller/auth";
 import { accessTokenGuard } from "../middlewares/guards/access.token.guard";
 import { createUserValidators } from "../middlewares/validators/user-validators";
-import { checkConfirmCodeValidators, resendEmailValidators } from "../middlewares/validators/auth-validators";
+import { checkConfirmCodeValidators, passwordRecoveryValidators, resendEmailValidators } from "../middlewares/validators/auth-validators";
 import { refreshTokenGuard } from "../middlewares/guards/refresh.token.guard";
 import { apiAttemptsGuard } from "../middlewares/guards/api.attempts.guard";
 
@@ -24,3 +25,5 @@ authRouter.post("/registration-confirmation", apiAttemptsGuard, ...checkConfirmC
 authRouter.post("/registration-email-resending", apiAttemptsGuard, ...resendEmailValidators, emailResendingController);
 authRouter.post("/refresh-token", refreshTokenGuard, refreshTokenController);
 authRouter.post("/logout", refreshTokenGuard, logoutController);
+
+authRouter.post("/password-recovery", apiAttemptsGuard, ...passwordRecoveryValidators, passwordRecoveryController);

@@ -105,3 +105,13 @@ export const logoutController = async(req: Request, res: Response) => {
   res.clearCookie('accessToken');
   res.sendStatus(204);
 }
+
+export const passwordRecoveryController = async(req: Request, res: Response) => {
+  const email = req.body.email;
+  const success = await authService.passwordRecovery(email);
+  if(success) {
+    res.send(204);
+  } else {
+    res.send(400)
+  }
+}

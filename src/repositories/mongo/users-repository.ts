@@ -1,7 +1,7 @@
 import { ObjectId, WithId } from "mongodb";
 import { IUserDB } from "../../@types/users";
 import { usersCollection } from "../../db/mongoDb";
-import { IUpdateConfirmationAfterEmailResendingDto } from "../../@types/auth";
+import { IUpdateConfirmationAfterEmailResendingDto, IUpdateConfirmationAfterPasswordReset } from "../../@types/auth";
 
 export const usersRepository = {
   async createUser(newUser: IUserDB): Promise<string> {
@@ -48,6 +48,18 @@ export const usersRepository = {
     let result = await usersCollection.updateOne({ _id }, { $set: { 
       'registerConfirmation.confirmationCode': confirmationCode,
       'registerConfirmation.expirationDate': expirationDate,
+    } });
+    return result.modifiedCount === 1
+  },
+
+  async updateConfirmationAfterPasswordReset(params: IUpdateConfirmationAfterPasswordReset): Promise<boolean> {
+
+    const { _id, confirmationCode, expirationDate, isConfirmed } = params
+
+    let result = await usersCollection.updateOne({ _id }, { $set: { 
+      'registerConfirmation.confirmationCode': confirmationCode,
+      'registerConfirmation.expirationDate': expirationDate,
+      'registerConfirmation.isConfirmed': isConfirmed,
     } });
     return result.modifiedCount === 1
   },

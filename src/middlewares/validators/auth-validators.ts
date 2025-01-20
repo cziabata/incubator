@@ -19,7 +19,7 @@ const codeParamValidator = body('code')
   })
   .withMessage('User with the given code does not exist');
 
-  export const emailInputValidation = body("email")
+export const emailInputValidation = body("email")
   .isString()
   .trim()
   .isLength({ min: 1 })
@@ -40,6 +40,13 @@ const codeParamValidator = body('code')
     }
   );
 
+export const passwordRecoveryEmailInputValidation = body("email")
+  .isString()
+  .trim()
+  .isLength({ min: 1 })
+  .isEmail()
+  .withMessage("Invalid email");
+
 export const checkConfirmCodeValidators = [
   codeParamValidator,
   checkValidationErrorsMiddleware
@@ -47,5 +54,10 @@ export const checkConfirmCodeValidators = [
 
 export const resendEmailValidators = [
   emailInputValidation,
+  checkValidationErrorsMiddleware
+]
+
+export const passwordRecoveryValidators = [
+  passwordRecoveryEmailInputValidation,
   checkValidationErrorsMiddleware
 ]
