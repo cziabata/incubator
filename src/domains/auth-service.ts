@@ -204,5 +204,19 @@ export const authService = {
       console.log(error);
       return false;
     }
+  },
+
+  async confirmPasswordRecovery(userId: string, newPassword: string, code: string): Promise<boolean> {
+    const user = await usersRepository.findUserById(userId);
+    if (!user) return false;
+    if (user.registerConfirmation.isConfirmed) return false;
+    if (user.registerConfirmation.confirmationCode !== code) return false;
+    if (!user.registerConfirmation.expirationDate) return false
+    if (!isAfter(user.registerConfirmation.expirationDate, new Date(Date.now()))) return false;
+
+    const hashPassword = await bcryptService.generateHash(newPassword);
+
+    const result = await usersRepository.updateUserAfterPasswordRecovery(user._id, hashPassword);
+    return result;
   }
 }

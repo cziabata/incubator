@@ -40,6 +40,12 @@ export const emailInputValidation = body("email")
     }
   );
 
+export const passwordInputValidation = body("password")
+  .isString()
+  .trim()
+  .isLength({ min: 6, max: 20 })
+  .withMessage("password is not correct");
+
 export const passwordRecoveryEmailInputValidation = body("email")
   .isString()
   .trim()
@@ -59,5 +65,11 @@ export const resendEmailValidators = [
 
 export const passwordRecoveryValidators = [
   passwordRecoveryEmailInputValidation,
+  checkValidationErrorsMiddleware
+]
+
+export const newPasswordValidators = [
+  codeParamValidator,
+  passwordInputValidation,
   checkValidationErrorsMiddleware
 ]

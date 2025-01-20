@@ -9,10 +9,11 @@ import {
   refreshTokenController,
   logoutController,
   passwordRecoveryController,
+  newPasswordController,
 } from "../controller/auth";
 import { accessTokenGuard } from "../middlewares/guards/access.token.guard";
 import { createUserValidators } from "../middlewares/validators/user-validators";
-import { checkConfirmCodeValidators, passwordRecoveryValidators, resendEmailValidators } from "../middlewares/validators/auth-validators";
+import { checkConfirmCodeValidators, newPasswordValidators, passwordRecoveryValidators, resendEmailValidators } from "../middlewares/validators/auth-validators";
 import { refreshTokenGuard } from "../middlewares/guards/refresh.token.guard";
 import { apiAttemptsGuard } from "../middlewares/guards/api.attempts.guard";
 
@@ -27,3 +28,4 @@ authRouter.post("/refresh-token", refreshTokenGuard, refreshTokenController);
 authRouter.post("/logout", refreshTokenGuard, logoutController);
 
 authRouter.post("/password-recovery", apiAttemptsGuard, ...passwordRecoveryValidators, passwordRecoveryController);
+authRouter.post("/new-password", apiAttemptsGuard, ...newPasswordValidators, newPasswordController);

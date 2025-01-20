@@ -64,6 +64,13 @@ export const usersRepository = {
     return result.modifiedCount === 1
   },
 
+  async updateUserAfterPasswordRecovery(_id: ObjectId, password: string): Promise<boolean> {
+    let result = await usersCollection.updateOne({ _id }, {
+      $set: { password, 'registerConfirmation.isConfirmed': true }
+    })
+      return result.modifiedCount === 1;
+    },
+
   _checkObjectId(id: string): boolean {
     return ObjectId.isValid(id)
   },
