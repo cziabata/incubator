@@ -46,6 +46,23 @@ export const passwordInputValidation = body("newPassword")
   .isLength({ min: 6, max: 20 })
   .withMessage("password is not correct");
 
+const recoveryCodeParamValidator = body('recoveryCode')
+  .isString()
+  .trim()
+  .notEmpty()
+  .custom(async (code, { req }) => {
+    const user = await usersRepository.findUserByConfirmationCode(code);
+    if (!user) {
+      req.statusCode = 400;
+      return Promise.reject('User with the given code does not exist');
+    }
+    if (user.registerConfirmation.isConfirmed) {
+      req.statusCode = 400;
+      return Promise.reject('Code already confirmed');
+    }
+  })
+  .withMessage('User with the given code does not exist');
+
 export const passwordRecoveryEmailInputValidation = body("email")
   .isString()
   .trim()
@@ -69,7 +86,7 @@ export const passwordRecoveryValidators = [
 ]
 
 export const newPasswordValidators = [
-  codeParamValidator,
-  // passwordInputValidation,
+  recoveryCodeParamValidator,
+  passwordInputValidation,
   checkValidationErrorsMiddleware
 ]
