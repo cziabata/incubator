@@ -40,7 +40,7 @@ export const emailInputValidation = body("email")
     }
   );
 
-export const passwordInputValidation = body("password")
+export const passwordInputValidation = body("newPassword")
   .isString()
   .trim()
   .isLength({ min: 6, max: 20 })
@@ -70,6 +70,6 @@ export const passwordRecoveryValidators = [
 
 export const newPasswordValidators = [
   codeParamValidator,
-  passwordInputValidation,
+  // passwordInputValidation,
   checkValidationErrorsMiddleware
 ]

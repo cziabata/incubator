@@ -119,9 +119,8 @@ export const passwordRecoveryController = async(req: Request, res: Response) => 
 export const newPasswordController = async(req: Request, res: Response) => {
   const password = req.body.newPassword;
   const code = req.body.code;
-  const userId = req.user?.id as string;
 
-  const success = await authService.confirmPasswordRecovery(userId, password, code);
+  const success = await authService.confirmPasswordRecovery(password, code);
   if(success) {
     res.send(204);
   } else {

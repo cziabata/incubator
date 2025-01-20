@@ -206,8 +206,8 @@ export const authService = {
     }
   },
 
-  async confirmPasswordRecovery(userId: string, newPassword: string, code: string): Promise<boolean> {
-    const user = await usersRepository.findUserById(userId);
+  async confirmPasswordRecovery(newPassword: string, code: string): Promise<boolean> {
+    const user = await usersRepository.findUserByConfirmationCode(code);
     if (!user) return false;
     if (user.registerConfirmation.isConfirmed) return false;
     if (user.registerConfirmation.confirmationCode !== code) return false;
