@@ -19,6 +19,6 @@ export const inputCommentValidators = [
 ]
 
 export const iLikeStatusValidationValidators = [
-  commentInputValidation,
+  likeStatusValidation,
   checkValidationErrorsMiddleware
 ]
