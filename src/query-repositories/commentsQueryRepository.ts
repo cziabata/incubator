@@ -3,21 +3,35 @@ import { ICommentDB, ICommentDto, ICommentView, ISearchCommentsValues, } from ".
 import { commentsCollection } from "../db/mongoDb";
 
 export const commentsQueryRepository = {
-  async getCommentById(id: string): Promise<ICommentView | null> {
+  async getCommentById(id: string, userId?: string): Promise<ICommentView | null> {
 
     if (!this._checkObjectId(id)) return null;
 
     const comment = await commentsCollection.findOne({ _id: new ObjectId(id) });
 
-    if(comment) {
-      return this._mapToOutput(comment);
+    if (comment) {
+      return this._mapToOutput(comment, userId);
     } else {
       return null;
     }
 
   },
 
-  async getCommentsByPostId(query: ISearchCommentsValues): Promise<ICommentDto> {
+  async getDBCommentById(id: string, userId?: string): Promise<ICommentDB | null> {
+
+    if (!this._checkObjectId(id)) return null;
+
+    const comment = await commentsCollection.findOne({ _id: new ObjectId(id) });
+
+    if (comment) {
+      return comment;
+    } else {
+      return null;
+    }
+
+  },
+
+  async getCommentsByPostId(query: ISearchCommentsValues, userId?: string): Promise<ICommentDto> {
 
     const { pageNumber, pageSize, sortBy, sortDirection, postId } = query;
 
@@ -38,17 +52,27 @@ export const commentsQueryRepository = {
       page: pageNumber,
       pageSize: pageSize,
       totalCount,
-      items: comments.map(c => this._mapToOutput(c)),
+      items: comments.map(c => this._mapToOutput(c, userId)),
     }
 
   },
 
-  _mapToOutput(comment: WithId<ICommentDB>): ICommentView {
+  _mapToOutput(comment: WithId<ICommentDB>, userId?: string): ICommentView {
+
+    const status = (!userId || comment.likes.length === 0)
+      ? "None"
+      : comment.likes.find(l => l.authorId === userId)?.status ?? "None";
+
     return {
       id: comment._id.toString(),
       content: comment.content,
       commentatorInfo: comment.commentatorInfo,
       createdAt: comment.createdAt,
+      likesInfo: {
+        likesCount: comment.likesCount,
+        dislikesCount: comment.dislikesCount,
+        myStatus: status,
+      },
     };
   },
 

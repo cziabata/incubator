@@ -8,6 +8,11 @@ export interface ICommentView {
     userLogin: string
   }
   createdAt: string
+  likesInfo: { 
+    likesCount: number
+    dislikesCount: number
+    myStatus: LikeStatus
+  }
 }
 
 export interface ICommentDB {
@@ -19,6 +24,9 @@ export interface ICommentDB {
   }
   createdAt: string
   postId: string
+  likes: ILikeDB[]
+  likesCount: number
+  dislikesCount: number
 }
 
 export interface ICommentInput {
@@ -41,4 +49,17 @@ export interface INewCommentDto {
   };
   createdAt: string;
   postId: string;
+}
+
+export type LikeStatus = "Like" | "Dislike" | "None"
+export interface ILikeDB {
+  createdAt: Date
+  status: LikeStatus
+  authorId: string
+}
+
+export interface IUpdateLikeDto {
+  status: LikeStatus
+  authorId: string
+  commentId: string
 }

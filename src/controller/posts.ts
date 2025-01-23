@@ -62,6 +62,7 @@ export const getPostCommentsController = async (req: Request, res: Response) => 
 
   const paginationValues: IPaginationValues = getPaginationValues(req.query);
   const postId = req.params.id;
+  const userId = req.user?.id;
 
   const post = await postsQueryRepository.getPostById(postId);
 
@@ -73,7 +74,7 @@ export const getPostCommentsController = async (req: Request, res: Response) => 
   const posts = await commentsQueryRepository.getCommentsByPostId({
     ...paginationValues,
     postId,
-  })
+  }, userId);
 
   res.status(200).send(posts);
 
