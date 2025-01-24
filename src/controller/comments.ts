@@ -86,7 +86,7 @@ export const updateCommentLikeController = async (req: Request, res: Response) =
   const userId = req.user?.id as string;
 
   const commentId = req.params.id;
-  const status = req.body.status;
+  const status = req.body.likeStatus;
 
   const resultStatus = await commentsService.updateCommentLike({ commentId, status, authorId: userId });
 
