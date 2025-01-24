@@ -28,7 +28,7 @@ export const commentsService = {
       }
 
       if (status === "None") {
-        const result = await commentsRepository.removeLike(data);
+        const result = await commentsRepository.removeLike(data, existingLike.status);
         return result ? 204 : 400;
       }
       const result = await commentsRepository.updateLike(commentId, authorId, status, existingLike.status);

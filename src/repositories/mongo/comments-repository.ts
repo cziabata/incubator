@@ -45,9 +45,9 @@ export const commentsRepository = {
       { _id: new ObjectId(commentId) },
       {
         $push: { likes: { authorId, status, createdAt: new Date() } },
-        $inc: { 
-          likesCount: status === "Like" ? 1 : 0, 
-          dislikesCount: status === "Dislike" ? 1 : 0 
+        $inc: {
+          likesCount: status === "Like" ? 1 : 0,
+          dislikesCount: status === "Dislike" ? 1 : 0
         }
       }
     );
@@ -69,19 +69,35 @@ export const commentsRepository = {
     return result.matchedCount === 1;
   },
 
-  async removeLike(data: IUpdateLikeDto): Promise<boolean> {
+  async removeLike(data: IUpdateLikeDto, oldStatus: LikeStatus): Promise<boolean> {
     const { commentId, authorId, status } = data;
-    const result = await commentsCollection.updateOne(
-      { _id: new ObjectId(commentId) },
-      {
-        $pull: { likes: { authorId } },
-        $inc: { 
-          likesCount: status === "Like" ? -1 : 0, 
-          dislikesCount: status === "Dislike" ? -1 : 0 
+
+    if (status === "None") {
+      const result = await commentsCollection.updateOne(
+        { _id: new ObjectId(commentId) },
+        {
+          $pull: { likes: { authorId } },
+          $inc: {
+            likesCount: oldStatus === "Like" ? -1 : 0,
+            dislikesCount: oldStatus === "Dislike" ? -1 : 0
+          }
         }
-      }
-    );
-    return result.matchedCount === 1;
+      );
+      return result.matchedCount === 1;
+    } else {
+      const result = await commentsCollection.updateOne(
+        { _id: new ObjectId(commentId) },
+        {
+          $pull: { likes: { authorId } },
+          $inc: {
+            likesCount: status === "Like" ? -1 : 0,
+            dislikesCount: status === "Dislike" ? -1 : 0
+          }
+        }
+      );
+      return result.matchedCount === 1;
+    }
+
   }
 
 }
