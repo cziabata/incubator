@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { authService } from "../domains/auth-service";
 import { IUserInput } from "../@types/users";
-import { usersQueryRepository } from "../composition-root/users-composition-root";
+import { io_container } from "../composition-root/users-composition-root";
+import { UsersQueryRepository } from "../query-repositories/usersQueryRepository";
+
+const usersQueryRepository = io_container.resolve(UsersQueryRepository);
 
 export const loginController = async (req: Request, res: Response) => {
   

@@ -1,10 +1,12 @@
+import { inject, injectable } from 'inversify';
 import { IUserDB, IUserInput } from "../@types/users";
 import { UsersRepository } from "../repositories/mongo/users-repository";
 import { bcryptService } from "../application/bcrypt.service";
 
+@injectable()
 export class UsersService {
 
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor( @inject(UsersRepository) private readonly usersRepository: UsersRepository) {}
 
   async createUser(data: IUserInput): Promise<string> {
 

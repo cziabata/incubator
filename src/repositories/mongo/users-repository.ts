@@ -1,8 +1,9 @@
+import { injectable } from 'inversify';
 import { ObjectId, WithId } from "mongodb";
 import { IUserDB } from "../../@types/users";
 import { usersCollection } from "../../db/mongoDb";
 import { IUpdateConfirmationAfterEmailResendingDto, IUpdateConfirmationAfterPasswordReset } from "../../@types/auth";
-
+@injectable()
 export class UsersRepository {
   async createUser(newUser: IUserDB): Promise<string> {
     const createdUser = await usersCollection.insertOne(newUser);

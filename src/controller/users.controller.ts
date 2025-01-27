@@ -1,3 +1,4 @@
+import { inject, injectable } from 'inversify';
 import { Request, Response } from "express";
 import { IPaginationValues } from "../@types/shared";
 import { getPaginationValues } from "../utils/pagination-helper";
@@ -5,11 +6,12 @@ import { UsersQueryRepository } from "../query-repositories/usersQueryRepository
 import { IUserInput } from "../@types/users";
 import { UsersService } from "../domains/users-service";
 
+@injectable()
 export class UsersController {
 
   constructor(
-    private readonly usersQueryRepository: UsersQueryRepository,
-    private readonly usersService: UsersService
+    @inject(UsersQueryRepository) private readonly usersQueryRepository: UsersQueryRepository,
+    @inject(UsersService) private readonly usersService: UsersService
   ) {}
 
   getUsersController = async (req: Request, res: Response) => {

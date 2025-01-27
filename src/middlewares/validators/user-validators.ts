@@ -1,6 +1,9 @@
-import { body, param } from "express-validator";
-import { usersRepository } from "../../composition-root/users-composition-root";
+import { body } from "express-validator";
+import { io_container } from "../../composition-root/users-composition-root";
 import { checkValidationErrorsMiddleware } from "./check-validation-errors-middleware";
+import { UsersRepository } from "../../repositories/mongo/users-repository";
+
+const usersRepository = io_container.resolve(UsersRepository);
 
 export const emailInputValidation = body("email")
   .isString()

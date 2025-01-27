@@ -1,6 +1,9 @@
 import { body } from "express-validator";
 import { checkValidationErrorsMiddleware } from "./check-validation-errors-middleware";
-import { usersRepository } from "../../composition-root/users-composition-root";
+import { io_container } from "../../composition-root/users-composition-root";
+import { UsersRepository } from "../../repositories/mongo/users-repository";
+
+const usersRepository = io_container.resolve(UsersRepository);
 
 const codeParamValidator = body('code')
   .isString()

@@ -13,7 +13,10 @@ import { securityDevicesService } from "./security-devices-service";
 import { IIdType, ISessionType } from "../@types/shared";
 import { ISession } from "../@types/auth";
 import { securityDevicesRepository } from "../repositories/mongo/security-devices-repository";
-import { usersRepository } from "../composition-root/users-composition-root";
+import { io_container } from "../composition-root/users-composition-root";
+import { UsersRepository } from "../repositories/mongo/users-repository";
+
+const usersRepository = io_container.resolve(UsersRepository);
 
 export const authService = {
 

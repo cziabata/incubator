@@ -1,9 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { jwtService } from "../../application/jwt.service";
-import { usersRepository } from "../../composition-root/users-composition-root";
+import { io_container } from "../../composition-root/users-composition-root";
 import { IIdType, ISessionType } from "../../@types/shared";
 import { refreshTokenRepository } from "../../repositories/mongo/refresh-tokens-repository";
 import { sessionsQueryRepository } from "../../query-repositories/sessionsQueryRepository";
+import { UsersRepository } from "../../repositories/mongo/users-repository";
+
+const usersRepository = io_container.resolve(UsersRepository);
 
 export const refreshTokenGuard = async (req: Request, res: Response, next: NextFunction) => {
 

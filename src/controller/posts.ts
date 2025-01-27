@@ -5,7 +5,10 @@ import { getPaginationValues } from '../utils/pagination-helper';
 import { postsQueryRepository } from '../query-repositories/postsQueryRepository';
 import { commentsQueryRepository } from '../query-repositories/commentsQueryRepository';
 import { INewCommentDto } from '../@types/comments';
-import { usersQueryRepository } from '../composition-root/users-composition-root';
+import { io_container } from '../composition-root/users-composition-root';
+import { UsersQueryRepository } from '../query-repositories/usersQueryRepository';
+
+const usersQueryRepository = io_container.resolve(UsersQueryRepository);
 
 export const getPostsController = async (req: Request, res: Response) => {
   

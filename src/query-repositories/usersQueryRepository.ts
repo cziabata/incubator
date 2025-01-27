@@ -1,7 +1,9 @@
+import { injectable } from 'inversify';
 import { ObjectId, WithId } from "mongodb";
 import { ISearchUsersValues, IUsersDto, IUserView } from "../@types/users";
 import { usersCollection } from "../db/mongoDb";
 
+@injectable()
 export class UsersQueryRepository {
 
   async getUsers(query: ISearchUsersValues): Promise<IUsersDto> {
