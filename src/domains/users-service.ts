@@ -1,8 +1,11 @@
 import { IUserDB, IUserInput } from "../@types/users";
-import { usersRepository } from "../repositories/mongo/users-repository";
+import { UsersRepository } from "../repositories/mongo/users-repository";
 import { bcryptService } from "../application/bcrypt.service";
 
-export const usersService = {
+export class UsersService {
+
+  constructor(private readonly usersRepository: UsersRepository) {}
+
   async createUser(data: IUserInput): Promise<string> {
 
     const hashPassword = await bcryptService.generateHash(data.password);
@@ -20,14 +23,14 @@ export const usersService = {
       }
     };
 
-    const createdUserId = await usersRepository.createUser(newUser);
+    const createdUserId = await this.usersRepository.createUser(newUser);
 
     return createdUserId;
-  },
+  }
 
   async deleteUser(id: string): Promise<boolean> {
-    const user = await usersRepository.findUserById(id);
+    const user = await this.usersRepository.findUserById(id);
     if (!user) return false;
-    return await usersRepository.deleteUser(id);
-  },
+    return await this.usersRepository.deleteUser(id);
+  }
 }

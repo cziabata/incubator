@@ -1,7 +1,6 @@
 import { WithId } from "mongodb";
 import { Request } from "express";
 import { IUserDB, IUserInput } from "../@types/users";
-import { usersRepository } from "../repositories/mongo/users-repository";
 import { bcryptService } from "../application/bcrypt.service";
 import { emailService } from "./email-service";
 import { v4 as uuidv4 } from "uuid";
@@ -14,6 +13,7 @@ import { securityDevicesService } from "./security-devices-service";
 import { IIdType, ISessionType } from "../@types/shared";
 import { ISession } from "../@types/auth";
 import { securityDevicesRepository } from "../repositories/mongo/security-devices-repository";
+import { usersRepository } from "../composition-root/users-composition-root";
 
 export const authService = {
 

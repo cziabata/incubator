@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { authService } from "../domains/auth-service";
-import { usersQueryRepository } from "../query-repositories/usersQueryRepository";
 import { IUserInput } from "../@types/users";
+import { usersQueryRepository } from "../composition-root/users-composition-root";
 
 export const loginController = async (req: Request, res: Response) => {
   

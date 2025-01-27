@@ -1,5 +1,5 @@
 import { body, param } from "express-validator";
-import { usersRepository } from "../../repositories/mongo/users-repository";
+import { usersRepository } from "../../composition-root/users-composition-root";
 import { checkValidationErrorsMiddleware } from "./check-validation-errors-middleware";
 
 export const emailInputValidation = body("email")

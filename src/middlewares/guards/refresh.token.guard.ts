@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { jwtService } from "../../application/jwt.service";
-import { usersRepository } from "../../repositories/mongo/users-repository";
+import { usersRepository } from "../../composition-root/users-composition-root";
 import { IIdType, ISessionType } from "../../@types/shared";
 import { refreshTokenRepository } from "../../repositories/mongo/refresh-tokens-repository";
 import { sessionsQueryRepository } from "../../query-repositories/sessionsQueryRepository";

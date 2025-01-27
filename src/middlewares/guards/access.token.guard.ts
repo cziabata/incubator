@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { jwtService } from "../../application/jwt.service";
-import { usersRepository } from "../../repositories/mongo/users-repository";
 import { IIdType } from "../../@types/shared";
+import { usersRepository } from "../../composition-root/users-composition-root";
 
 export const accessTokenGuard = async (req: Request, res: Response, next: NextFunction) => {
 

@@ -2,7 +2,7 @@ import { ObjectId, WithId } from "mongodb";
 import { ISearchUsersValues, IUsersDto, IUserView } from "../@types/users";
 import { usersCollection } from "../db/mongoDb";
 
-export const usersQueryRepository = {
+export class UsersQueryRepository {
 
   async getUsers(query: ISearchUsersValues): Promise<IUsersDto> {
 
@@ -37,13 +37,13 @@ export const usersQueryRepository = {
       pageSize: pageSize,
       totalCount,
     }
-  },
+  }
 
   async getUserById(id: string): Promise<IUserView | null> {
     if (!this._checkObjectId(id)) return null;
     const user = await usersCollection.findOne({ _id: new ObjectId(id) });
     return user ? this._mapToOutput(user) : null;
-  },
+  }
 
   _mapToOutput(user: WithId<IUserView>): IUserView {
     return {
@@ -52,7 +52,7 @@ export const usersQueryRepository = {
       email: user.email,
       createdAt: user.createdAt,
     };
-  },
+  }
   _checkObjectId(id: string): boolean {
     return ObjectId.isValid(id);
   }

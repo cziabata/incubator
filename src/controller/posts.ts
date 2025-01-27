@@ -4,8 +4,8 @@ import { IPaginationValues } from '../@types/shared';
 import { getPaginationValues } from '../utils/pagination-helper';
 import { postsQueryRepository } from '../query-repositories/postsQueryRepository';
 import { commentsQueryRepository } from '../query-repositories/commentsQueryRepository';
-import { usersQueryRepository } from '../query-repositories/usersQueryRepository';
 import { INewCommentDto } from '../@types/comments';
+import { usersQueryRepository } from '../composition-root/users-composition-root';
 
 export const getPostsController = async (req: Request, res: Response) => {
   
