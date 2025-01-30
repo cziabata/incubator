@@ -1,4 +1,4 @@
-import { IPaginationResultValues, IPaginationValues } from "./shared"
+import { IPaginationResultValues, IPaginationValues, LikeStatus } from "./shared"
 
 export interface ICommentView {
   id: string
@@ -50,8 +50,6 @@ export interface INewCommentDto {
   createdAt: string;
   postId: string;
 }
-
-export type LikeStatus = "Like" | "Dislike" | "None"
 export interface ILikeDB {
   createdAt: Date
   status: LikeStatus

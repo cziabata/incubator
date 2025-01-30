@@ -1,5 +1,5 @@
 import { postsRepository } from "../repositories/mongo/posts-repository";
-import { IPostInput, IPostsDto, IPostView, ISearchPostsValues } from "../@types/posts";
+import { IPostDB, IPostInput, IPostsDto, IPostView, ISearchPostsValues } from "../@types/posts";
 import { blogsService } from "./blogs-service";
 import { ICommentView, INewCommentDto } from "../@types/comments";
 import { commentsRepository } from "../repositories/mongo/comments-repository";
@@ -14,7 +14,7 @@ export const postsService = {
 
     const relatedBlog = await blogsService.getBlogById(data.blogId);
 
-    const newPost = {
+    const newPost: IPostDB = {
       id: String(Date.now()),
       createdAt: new Date().toISOString(),
       title: data.title,
@@ -22,6 +22,9 @@ export const postsService = {
       content: data.content,
       blogId: data.blogId,
       blogName: relatedBlog?.name || "",
+      likes: [],
+      likesCount: 0,
+      dislikesCount: 0,
     };
 
     return await postsRepository.createPost(newPost);

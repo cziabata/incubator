@@ -1,5 +1,5 @@
 import { postsCollection } from "../../db/mongoDb";
-import { IPostInput, IPostsDto, IPostView, ISearchPostsValues } from "../../@types/posts";
+import { ILikesDetails, IPostDB, IPostInput, IPostsDto, IPostView, ISearchPostsValues } from "../../@types/posts";
 import { IBlogPostsDto, ISearchPostsByBlogIdValues } from "../../@types/blogs";
 
 export const postsRepository = {
@@ -29,7 +29,7 @@ export const postsRepository = {
 
   },
 
-  async createPost(newPost: IPostView): Promise<IPostView> {
+  async createPost(newPost: IPostDB): Promise<IPostView> {
     await postsCollection.insertOne(newPost);
     return this.mapToOutput(newPost);
   },
@@ -83,7 +83,20 @@ export const postsRepository = {
     }
   },
 
-  mapToOutput(post: IPostView): IPostView {
+  mapToOutput(post: IPostDB, userId?: string): IPostView {
+    const status = (!userId || post.likes.length === 0)
+      ? "None"
+      : post.likes.find(l => l.userId === userId)?.status ?? "None";
+
+    const newestLikes: ILikesDetails[] = post.likes
+    .sort((a, b) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
+    .slice(0, 3)
+    .map(l => ({
+      userId: l.userId,
+      login: l.login,
+      addedAt: l.addedAt,
+    }))
+
     return {
       id: post.id,
       createdAt: post.createdAt,
@@ -92,6 +105,12 @@ export const postsRepository = {
       content: post.content,
       blogId: post.blogId,
       blogName: post.blogName,
+      extendedLikesInfo: {
+        likesCount: post.likesCount,
+        dislikesCount: post.dislikesCount,
+        myStatus: status,
+        newestLikes
+      }
     };
   }
 };

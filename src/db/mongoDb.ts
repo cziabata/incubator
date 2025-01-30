@@ -2,7 +2,7 @@ import { Collection, MongoClient, ServerApiVersion }from 'mongodb';
 import * as dotenv from "dotenv";
 import { SETTINGS } from '../config';
 import { IBlogView } from '../@types/blogs';
-import { IPostView } from '../@types/posts';
+import { IPostDB } from '../@types/posts';
 import { IUserDB } from '../@types/users';
 import { ICommentDB } from '../@types/comments';
 import { ISession, IUsedRefreshToken } from '../@types/auth';
@@ -11,7 +11,7 @@ import mongoose from 'mongoose';
 dotenv.config();
 
 export let blogsCollection: Collection<IBlogView>;
-export let postsCollection: Collection<IPostView>;
+export let postsCollection: Collection<IPostDB>;
 export let usersCollection: Collection<IUserDB>;
 export let commentsCollection: Collection<ICommentDB>;
 export let refreshTokensBlackListCollection: Collection<IUsedRefreshToken>;
@@ -30,7 +30,7 @@ export async function runDb(url: string ) {
   let db = client.db(SETTINGS.DB_NAME);
 
   blogsCollection = db.collection<IBlogView>("blogs");
-  postsCollection = db.collection<IPostView>("posts");
+  postsCollection = db.collection<IPostDB>("posts");
   usersCollection = db.collection<IUserDB>("users");
   commentsCollection = db.collection<ICommentDB>("comments");
   refreshTokensBlackListCollection = db.collection<IUsedRefreshToken>("refreshTokensBlackList");

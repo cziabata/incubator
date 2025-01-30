@@ -49,3 +49,5 @@ export interface IApiAttempt {
   URL: string 
   date: Date
 }
+
+export type LikeStatus = "Like" | "Dislike" | "None"

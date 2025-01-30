@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import { commentsCollection } from "../../db/mongoDb";
-import { ICommentView, INewCommentDto, IUpdateLikeDto, LikeStatus } from "../../@types/comments";
+import { ICommentView, INewCommentDto, IUpdateLikeDto } from "../../@types/comments";
+import { LikeStatus } from "../../@types/shared";
 
 export const commentsRepository = {
 
