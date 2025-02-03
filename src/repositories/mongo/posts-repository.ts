@@ -2,7 +2,7 @@ import { postsCollection } from "../../db/mongoDb";
 import { ILikesDetails, IPostDB, IPostInput, IPostsDto, IPostView, ISearchPostsValues, IUpdateLikeDto } from "../../@types/posts";
 import { IBlogPostsDto, ISearchPostsByBlogIdValues } from "../../@types/blogs";
 import { LikeStatus } from "../../@types/shared";
-import { ObjectId } from "mongodb";
+import { ObjectId, WithId } from "mongodb";
 
 export const postsRepository = {
   async getPosts(query: ISearchPostsValues): Promise<IPostsDto> {
@@ -22,7 +22,7 @@ export const postsRepository = {
       .toArray();
 
     return {
-      items: posts.map(p => this.mapToOutput(p)),
+      items: posts.map(p => this.__mapToOutput(p)),
       pagesCount,
       page: pageNumber,
       pageSize: pageSize,
@@ -32,18 +32,18 @@ export const postsRepository = {
   },
 
   async createPost(newPost: IPostDB): Promise<IPostView> {
-    await postsCollection.insertOne(newPost);
-    return this.mapToOutput(newPost);
+    const { insertedId } = await postsCollection.insertOne(newPost);
+    return this.__mapToOutput({ ...newPost, _id: insertedId });
   },
 
-  async getPostById(id: string): Promise<IPostView | null> {
-    const post = await postsCollection.findOne({ id });
-    return post ? this.mapToOutput(post) : null;
+  async getPostById(id: string, userId?: string): Promise<IPostView | null> {
+    const post = await postsCollection.findOne({ _id: new ObjectId(id) });
+    return post ? this.__mapToOutput(post, userId) : null;
   },
 
   async updatePost(id: string, data: IPostInput): Promise<boolean> {
 
-    const result = await postsCollection.updateOne({ id }, {
+    const result = await postsCollection.updateOne({ _id: new ObjectId(id) }, {
       $set: {
         title: data.title,
         shortDescription: data.shortDescription,
@@ -57,7 +57,7 @@ export const postsRepository = {
   },
 
   async deletePost(id: string): Promise<boolean> {
-    const result = await postsCollection.deleteOne({ id });
+    const result = await postsCollection.deleteOne({ _id: new ObjectId(id) });
     return result.deletedCount === 1;
   },
 
@@ -77,7 +77,7 @@ export const postsRepository = {
       .toArray();
 
     return {
-      items: foundedPostsByBlogId.map(p => this.mapToOutput(p)),
+      items: foundedPostsByBlogId.map(p => this.__mapToOutput(p)),
       pagesCount,
       page: pageNumber,
       pageSize: pageSize,
@@ -87,9 +87,8 @@ export const postsRepository = {
 
   async addLike(data: IUpdateLikeDto): Promise<boolean> {
     const { postId, userId, status, login } = data;
-    console.log(postId);
     const result = await postsCollection.updateOne(
-      { id: postId },
+      { _id: new ObjectId(postId) },
       {
         $push: { likes: { userId, status, addedAt: new Date(), login } },
         $inc: {
@@ -98,14 +97,13 @@ export const postsRepository = {
         }
       }
     );
-    console.log(result);
     return result.matchedCount === 1;
   },
 
 
-  async updateLike(commentId: string, userId: string, newStatus: LikeStatus, oldStatus: LikeStatus): Promise<boolean> {
+  async updateLike(postId: string, userId: string, newStatus: LikeStatus, oldStatus: LikeStatus): Promise<boolean> {
     const result = await postsCollection.updateOne(
-      { id: commentId },
+      { _id: new ObjectId(postId) },
       {
         $set: { "likes.$[elem].status": newStatus },
         $inc: {
@@ -123,7 +121,7 @@ export const postsRepository = {
 
     if (status === "None") {
       const result = await postsCollection.updateOne(
-        { id: postId },
+        { _id: new ObjectId(postId) },
         {
           $pull: { likes: { userId } },
           $inc: {
@@ -135,7 +133,7 @@ export const postsRepository = {
       return result.matchedCount === 1;
     } else {
       const result = await postsCollection.updateOne(
-        { id: postId },
+        { _id: new ObjectId(postId) },
         {
           $pull: { likes: { userId } },
           $inc: {
@@ -148,12 +146,13 @@ export const postsRepository = {
     }
   },
 
-  mapToOutput(post: IPostDB, userId?: string): IPostView {
+  __mapToOutput(post: WithId<IPostDB>, userId?: string): IPostView {
     const status = (!userId || post.likes.length === 0)
       ? "None"
       : post.likes.find(l => l.userId === userId)?.status ?? "None";
 
     const newestLikes: ILikesDetails[] = post.likes
+      .filter(l => l.status === "Like")
       .sort((a, b) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
       .slice(0, 3)
       .map(l => ({
@@ -163,7 +162,7 @@ export const postsRepository = {
       }))
 
     return {
-      id: post.id,
+      id: post._id.toString(),
       createdAt: post.createdAt,
       title: post.title,
       shortDescription: post.shortDescription,

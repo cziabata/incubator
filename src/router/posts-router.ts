@@ -18,7 +18,7 @@ import { accessTokenOptionalGuard } from "../middlewares/guards/access.token.opt
 export const postsRouter = Router();
 
 postsRouter.get("/", getPostsController);
-postsRouter.get("/:id", ...checkIdPostValidators, getPostByIdController);
+postsRouter.get("/:id", accessTokenOptionalGuard, ...checkIdPostValidators, getPostByIdController);
 postsRouter.post("/", basicAuthGuard, ...createPostValidators, createPostController);
 postsRouter.put("/:id", basicAuthGuard, ...updatePostValidators, updatePostController);
 postsRouter.delete("/:id", basicAuthGuard, ...checkIdPostValidators, deletePostController);

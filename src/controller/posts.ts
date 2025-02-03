@@ -16,7 +16,8 @@ export const getPostsController = async (req: Request, res: Response) => {
 }
 
 export const getPostByIdController = async (req: Request, res: Response) => {
-  const post = await postsService.getPostById(req.params.id);
+  const userId = req.user?.id;
+  const post = await postsService.getPostById(req.params.id, userId);
   if (post) res.send(post);
   else res.send(404);
 }
@@ -51,7 +52,6 @@ export const updatePostController = async (req: Request, res: Response) => {
   }
   const isPostUpdated = await postsService.updatePost(req.params.id, prepareBody);
   if (isPostUpdated) {
-    const updatedPost = postsService.getPostById(req.params.id)
     res.send(204) // .send(updatedPost)
   } else {
     res.send(404)
@@ -64,7 +64,7 @@ export const getPostCommentsController = async (req: Request, res: Response) => 
   const postId = req.params.id;
   const userId = req.user?.id;
 
-  const post = await postsQueryRepository.getPostById(postId);
+  const post = await postsQueryRepository.getPostById(postId, userId);
 
   if(!post) {
     res.send(404);
@@ -94,7 +94,7 @@ export const createPostCommentController = async (req: Request, res: Response) =
   }
 
   const postId = req.params.id;
-  const post = await postsQueryRepository.getPostById(postId);
+  const post = await postsQueryRepository.getPostById(postId, userId);
   if(!post) {
     res.send(404);
     return;

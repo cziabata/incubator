@@ -18,7 +18,6 @@ export const postsService = {
     const relatedBlog = await blogsService.getBlogById(data.blogId);
 
     const newPost: IPostDB = {
-      id: String(Date.now()),
       createdAt: new Date().toISOString(),
       title: data.title,
       shortDescription: data.shortDescription,
@@ -33,8 +32,8 @@ export const postsService = {
     return await postsRepository.createPost(newPost);
   },
 
-  async getPostById(id: string): Promise<IPostView | null> {
-    return await postsRepository.getPostById(id);
+  async getPostById(id: string, userId?: string): Promise<IPostView | null> {
+    return await postsRepository.getPostById(id, userId);
   },
 
   async updatePost(id: string, data: IPostInput): Promise<boolean> {
