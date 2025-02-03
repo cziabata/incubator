@@ -49,6 +49,13 @@ export interface ILikeDB {
   status: LikeStatus
 }
 
+export interface IUpdateLikeDto {
+  status: LikeStatus
+  userId: string
+  postId: string
+  login: string
+}
+
 export interface ISearchPostsValues extends IPaginationValues {
  
 }

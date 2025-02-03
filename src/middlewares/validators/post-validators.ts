@@ -47,6 +47,12 @@ const contentInputValidator = body('content')
   .notEmpty()
   .withMessage("ID should be a non-empty string");
 
+  export const likeStatusValidation = body("likeStatus")
+  .isString()
+  .trim()
+  .isIn(["Like", "Dislike", "None"])
+  .withMessage("Invalid like status. Allowed values: 'Like', 'Dislike', 'None'.");
+
 export const createPostValidators = [
   titleInputValidator,
   shortDescriptionInputValidator,
@@ -74,5 +80,10 @@ export const updatePostValidators = [
 
 export const checkIdPostValidators = [
   idParamValidator,
+  checkValidationErrorsMiddleware
+]
+
+export const likeStatusValidators = [
+  likeStatusValidation,
   checkValidationErrorsMiddleware
 ]

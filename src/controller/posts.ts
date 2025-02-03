@@ -117,3 +117,15 @@ export const createPostCommentController = async (req: Request, res: Response) =
   res.status(201).send(createdComment);
   
 }
+
+export const updatePostLikeController = async (req: Request, res: Response) => {
+  const userId = req.user?.id as string;
+
+  const postId = req.params.id;
+  const status = req.body.likeStatus;
+
+  const resultStatus = await postsService.updatePostLike(postId, status, userId);
+
+  res.send(resultStatus);
+  return;
+}

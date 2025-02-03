@@ -1,3 +1,4 @@
+import { WithId } from "mongodb";
 import { ILikesDetails, IPostDB, IPostView } from "../@types/posts";
 import { postsCollection } from "../db/mongoDb";
 
@@ -6,6 +7,11 @@ export const postsQueryRepository = {
   async getPostById(id: string): Promise<IPostView | null> {
     const post = await postsCollection.findOne({ id });
     return post ? this.__mapToOutput(post) : null;
+  },
+
+  async getDBPostById(id: string): Promise<WithId<IPostDB> | null> {
+    const post = await postsCollection.findOne({ id });
+    return post;
   },
 
   __mapToOutput(post: IPostDB, userId?: string): IPostView {

@@ -1,8 +1,11 @@
 import { postsRepository } from "../repositories/mongo/posts-repository";
-import { IPostDB, IPostInput, IPostsDto, IPostView, ISearchPostsValues } from "../@types/posts";
+import { IPostDB, IPostInput, IPostsDto, IPostView, ISearchPostsValues, IUpdateLikeDto } from "../@types/posts";
 import { blogsService } from "./blogs-service";
 import { ICommentView, INewCommentDto } from "../@types/comments";
 import { commentsRepository } from "../repositories/mongo/comments-repository";
+import { postsQueryRepository } from "../query-repositories/postsQueryRepository";
+import { usersQueryRepository } from "../query-repositories/usersQueryRepository";
+import { LikeStatus } from "../@types/shared";
 
 export const postsService = {
 
@@ -30,7 +33,7 @@ export const postsService = {
     return await postsRepository.createPost(newPost);
   },
 
-  async getPostById(id: string): Promise< IPostView | null> {
+  async getPostById(id: string): Promise<IPostView | null> {
     return await postsRepository.getPostById(id);
   },
 
@@ -45,5 +48,44 @@ export const postsService = {
   async createPostComment(data: INewCommentDto): Promise<ICommentView> {
     return await commentsRepository.createComment(data);
   },
+
+  async updatePostLike(postId: string, status: LikeStatus, userId: string): Promise<number> {
+
+    const user = await usersQueryRepository.getUserById(userId);
+
+    if (!user) return 404;
+
+    const post = await postsQueryRepository.getDBPostById(postId);
+    if (!post) return 404;
+
+    const data: IUpdateLikeDto = {
+      status,
+      userId,
+      postId,
+      login: user.login,
+    }
+
+    const existingLike = post.likes.find(like => like.userId === userId);
+
+    if (existingLike) {
+      if (existingLike.status === status) {
+        return 204; // Статус не изменился, ничего не делаем
+      }
+
+      if (status === "None") {
+        const result = await postsRepository.removeLike(data, existingLike.status);
+        return result ? 204 : 400;
+      }
+      const result = await postsRepository.updateLike(postId, userId, status, existingLike.status);
+      return result ? 204 : 400;
+    }
+
+    if (status !== "None") {
+      const result = await postsRepository.addLike(data);
+      return result ? 204 : 400;
+    }
+
+    return 204; // Лайка не было и установили "None" — ничего не делаем
+  }
 
 };

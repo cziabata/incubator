@@ -1,6 +1,8 @@
 import { postsCollection } from "../../db/mongoDb";
-import { ILikesDetails, IPostDB, IPostInput, IPostsDto, IPostView, ISearchPostsValues } from "../../@types/posts";
+import { ILikesDetails, IPostDB, IPostInput, IPostsDto, IPostView, ISearchPostsValues, IUpdateLikeDto } from "../../@types/posts";
 import { IBlogPostsDto, ISearchPostsByBlogIdValues } from "../../@types/blogs";
+import { LikeStatus } from "../../@types/shared";
+import { ObjectId } from "mongodb";
 
 export const postsRepository = {
   async getPosts(query: ISearchPostsValues): Promise<IPostsDto> {
@@ -83,19 +85,82 @@ export const postsRepository = {
     }
   },
 
+  async addLike(data: IUpdateLikeDto): Promise<boolean> {
+    const { postId, userId, status, login } = data;
+    console.log(postId);
+    const result = await postsCollection.updateOne(
+      { id: postId },
+      {
+        $push: { likes: { userId, status, addedAt: new Date(), login } },
+        $inc: {
+          likesCount: status === "Like" ? 1 : 0,
+          dislikesCount: status === "Dislike" ? 1 : 0
+        }
+      }
+    );
+    console.log(result);
+    return result.matchedCount === 1;
+  },
+
+
+  async updateLike(commentId: string, userId: string, newStatus: LikeStatus, oldStatus: LikeStatus): Promise<boolean> {
+    const result = await postsCollection.updateOne(
+      { id: commentId },
+      {
+        $set: { "likes.$[elem].status": newStatus },
+        $inc: {
+          likesCount: newStatus === "Like" && oldStatus !== "Like" ? 1 : oldStatus === "Like" ? -1 : 0,
+          dislikesCount: newStatus === "Dislike" && oldStatus !== "Dislike" ? 1 : oldStatus === "Dislike" ? -1 : 0
+        }
+      },
+      { arrayFilters: [{ "elem.userId": userId }] }
+    );
+    return result.matchedCount === 1;
+  },
+
+  async removeLike(data: IUpdateLikeDto, oldStatus: LikeStatus): Promise<boolean> {
+    const { postId, userId, status } = data;
+
+    if (status === "None") {
+      const result = await postsCollection.updateOne(
+        { id: postId },
+        {
+          $pull: { likes: { userId } },
+          $inc: {
+            likesCount: oldStatus === "Like" ? -1 : 0,
+            dislikesCount: oldStatus === "Dislike" ? -1 : 0
+          }
+        }
+      );
+      return result.matchedCount === 1;
+    } else {
+      const result = await postsCollection.updateOne(
+        { id: postId },
+        {
+          $pull: { likes: { userId } },
+          $inc: {
+            likesCount: status === "Like" ? -1 : 0,
+            dislikesCount: status === "Dislike" ? -1 : 0
+          }
+        }
+      );
+      return result.matchedCount === 1;
+    }
+  },
+
   mapToOutput(post: IPostDB, userId?: string): IPostView {
     const status = (!userId || post.likes.length === 0)
       ? "None"
       : post.likes.find(l => l.userId === userId)?.status ?? "None";
 
     const newestLikes: ILikesDetails[] = post.likes
-    .sort((a, b) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
-    .slice(0, 3)
-    .map(l => ({
-      userId: l.userId,
-      login: l.login,
-      addedAt: l.addedAt,
-    }))
+      .sort((a, b) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
+      .slice(0, 3)
+      .map(l => ({
+        userId: l.userId,
+        login: l.login,
+        addedAt: l.addedAt,
+      }))
 
     return {
       id: post.id,
