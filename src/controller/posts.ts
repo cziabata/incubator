@@ -8,10 +8,12 @@ import { usersQueryRepository } from '../query-repositories/usersQueryRepository
 import { INewCommentDto } from '../@types/comments';
 
 export const getPostsController = async (req: Request, res: Response) => {
+
+  const userId = req.user?.id;
   
   const paginationValues: IPaginationValues = getPaginationValues(req.query);
 
-  const foundPosts = await postsService.getPosts(paginationValues);
+  const foundPosts = await postsService.getPosts(paginationValues, userId);
   res.send(foundPosts);
 }
 

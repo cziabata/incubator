@@ -5,11 +5,17 @@ import { postsCollection } from "../db/mongoDb";
 export const postsQueryRepository = {
 
   async getPostById(id: string, userId?: string): Promise<IPostView | null> {
+    if (!ObjectId.isValid(id)) {
+      return null;
+    }
     const post = await postsCollection.findOne({  _id: new ObjectId(id) });
     return post ? this.__mapToOutput(post, userId) : null;
   },
 
   async getDBPostById(id: string): Promise<WithId<IPostDB> | null> {
+    if (!ObjectId.isValid(id)) {
+      return null;
+    }
     const post = await postsCollection.findOne({ _id: new ObjectId(id) });
     return post;
   },

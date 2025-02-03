@@ -35,8 +35,8 @@ export const blogsService = {
     return await blogsRepository.deleteBlog(id)
   },
 
-  async getBlogPosts(query: ISearchPostsByBlogIdValues): Promise<IBlogPostsDto> {
-    return postsRepository.getPostsByBlogId(query)
+  async getBlogPosts(query: ISearchPostsByBlogIdValues, userId?: string): Promise<IBlogPostsDto> {
+    return postsRepository.getPostsByBlogId(query, userId)
   },
 
   async createPostForBlog(data: IPostInput): Promise<IPostView> {

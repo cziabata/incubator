@@ -5,7 +5,7 @@ import { LikeStatus } from "../../@types/shared";
 import { ObjectId, WithId } from "mongodb";
 
 export const postsRepository = {
-  async getPosts(query: ISearchPostsValues): Promise<IPostsDto> {
+  async getPosts(query: ISearchPostsValues, userId?: string): Promise<IPostsDto> {
 
     const { pageNumber, pageSize, sortBy, sortDirection } = query;
 
@@ -22,7 +22,7 @@ export const postsRepository = {
       .toArray();
 
     return {
-      items: posts.map(p => this.__mapToOutput(p)),
+      items: posts.map(p => this.__mapToOutput(p, userId)),
       pagesCount,
       page: pageNumber,
       pageSize: pageSize,
@@ -37,11 +37,17 @@ export const postsRepository = {
   },
 
   async getPostById(id: string, userId?: string): Promise<IPostView | null> {
+    if (!ObjectId.isValid(id)) {
+      return null;
+    }
     const post = await postsCollection.findOne({ _id: new ObjectId(id) });
     return post ? this.__mapToOutput(post, userId) : null;
   },
 
   async updatePost(id: string, data: IPostInput): Promise<boolean> {
+    if (!ObjectId.isValid(id)) {
+      return false;
+    }
 
     const result = await postsCollection.updateOne({ _id: new ObjectId(id) }, {
       $set: {
@@ -57,11 +63,14 @@ export const postsRepository = {
   },
 
   async deletePost(id: string): Promise<boolean> {
+    if (!ObjectId.isValid(id)) {
+      return false;
+    }
     const result = await postsCollection.deleteOne({ _id: new ObjectId(id) });
     return result.deletedCount === 1;
   },
 
-  async getPostsByBlogId(query: ISearchPostsByBlogIdValues): Promise<IBlogPostsDto> {
+  async getPostsByBlogId(query: ISearchPostsByBlogIdValues, userId?: string): Promise<IBlogPostsDto> {
     const { blogId, pageNumber, pageSize, sortBy, sortDirection } = query;
 
     const filter = { blogId: { $regex: blogId } };
@@ -77,7 +86,7 @@ export const postsRepository = {
       .toArray();
 
     return {
-      items: foundedPostsByBlogId.map(p => this.__mapToOutput(p)),
+      items: foundedPostsByBlogId.map(p => this.__mapToOutput(p, userId)),
       pagesCount,
       page: pageNumber,
       pageSize: pageSize,
@@ -87,6 +96,9 @@ export const postsRepository = {
 
   async addLike(data: IUpdateLikeDto): Promise<boolean> {
     const { postId, userId, status, login } = data;
+    if (!ObjectId.isValid(postId)) {
+      return false;
+    }
     const result = await postsCollection.updateOne(
       { _id: new ObjectId(postId) },
       {
@@ -102,6 +114,9 @@ export const postsRepository = {
 
 
   async updateLike(postId: string, userId: string, newStatus: LikeStatus, oldStatus: LikeStatus): Promise<boolean> {
+    if (!ObjectId.isValid(postId)) {
+      return false;
+    }
     const result = await postsCollection.updateOne(
       { _id: new ObjectId(postId) },
       {
@@ -118,6 +133,9 @@ export const postsRepository = {
 
   async removeLike(data: IUpdateLikeDto, oldStatus: LikeStatus): Promise<boolean> {
     const { postId, userId, status } = data;
+    if (!ObjectId.isValid(postId)) {
+      return false;
+    }
 
     if (status === "None") {
       const result = await postsCollection.updateOne(

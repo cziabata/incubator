@@ -9,8 +9,8 @@ import { LikeStatus } from "../@types/shared";
 
 export const postsService = {
 
-  async getPosts(query: ISearchPostsValues): Promise<IPostsDto> {
-    return await postsRepository.getPosts(query);
+  async getPosts(query: ISearchPostsValues, userId?: string): Promise<IPostsDto> {
+    return await postsRepository.getPosts(query, userId);
   },
 
   async createPost(data: IPostInput): Promise<IPostView> {

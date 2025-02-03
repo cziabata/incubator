@@ -58,10 +58,11 @@ export const updateBlogController = async (req: Request, res: Response) => {
 export const getBlogPostsController = async (req: Request, res: Response) => {
   const paginationValues: IPaginationValues = getPaginationValues(req.query);
   const blogId = req.params.id;
+  const userId = req.user?.id;
   const foundBlogs = await blogsService.getBlogPosts({
     ...paginationValues,
-    blogId
-  });
+    blogId,
+  }, userId);
   if (foundBlogs) res.send(foundBlogs);
   else res.send(404);
 }
